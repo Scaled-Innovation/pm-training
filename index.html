@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>lern.link PM-Training</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap">
+<style>
+/* Layout: Bühne mittig, Trainer-Regie rechts. Scaled-Innovation-CI: Navy-Stufen, Violet-Akzent, Open Sans, keine Schatten. Bewusst Single-Theme (dark). */
+:root{
+  --navy:#0E1620; --navy-2:#16202E; --navy-3:#1E2D3F;
+  --violet:#7570FF; --violet-l:#A09DFF; --violet-d:#4C49CC;
+  --green:#1DBC8A; --amber:#F5A623; --red:#E05252;
+  --offwhite:#F2EFEE; --dim:rgba(242,239,238,0.82); --dim2:rgba(242,239,238,0.55); --white:#fff;
+  --border:rgba(238,233,236,0.1); --border-v:rgba(117,112,255,0.25);
+  --bg:var(--navy); --fg:var(--offwhite); --accent:var(--violet);
+  --body:"Open Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{height:100%}
+body{background:var(--navy);color:var(--offwhite);font-family:var(--body);font-size:15px;line-height:1.65;margin:0;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--navy)}
+h1,h2,h3,h4{line-height:1.2;letter-spacing:-.02em;text-wrap:balance;margin:0;color:var(--white)}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--violet-l);outline-offset:2px}
+em{color:var(--violet-l);font-style:normal}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--navy);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));flex-wrap:wrap}
+.brand{font-weight:800;font-size:16px;letter-spacing:-.02em;color:var(--white);display:flex;align-items:center;gap:10px}
+.brand .mark{width:22px;height:22px;border-radius:6px;background:var(--violet);display:inline-block}
+.brand small{font-weight:400;color:var(--dim2);font-size:13px}
+.badge{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;padding:4px 10px;border-radius:8px;background:var(--navy-3);color:var(--violet-l);border:1px solid var(--border-v)}
+.spacer{flex:1}
+.topbar button{background:var(--navy-2);color:var(--offwhite);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}
+.topbar button.on{background:var(--violet);border-color:var(--violet);color:var(--white)}
+.clock{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;color:var(--dim)}
+.wrap{flex:1;display:grid;grid-template-columns:minmax(0,1fr);gap:20px;padding-block:24px 96px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1500px;width:100%;margin:0 auto}
+.wrap.trainer{grid-template-columns:minmax(0,1fr) minmax(300px,380px)}
+@media (max-width:900px){.wrap.trainer{grid-template-columns:minmax(0,1fr)}}
+.stage{min-width:0;background:var(--navy-2);border:1px solid var(--border);border-radius:12px;padding:32px clamp(16px,4vw,48px) 36px}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--violet-l);margin-bottom:14px}
+.eyebrow::before{content:"";width:16px;height:2px;background:var(--violet-l);border-radius:2px}
+.eyebrow .opt{color:var(--amber)}
+.stage h1{font-size:clamp(1.6rem,3vw,2.4rem);font-weight:800;margin-bottom:14px}
+.lead{font-size:17px;color:var(--dim);max-width:66ch;margin-bottom:18px;font-weight:300}
+.block{margin-top:26px}
+.block h3{font-size:17px;font-weight:700;margin-bottom:10px}
+ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ul.clean li{padding-left:20px;position:relative;color:var(--dim)}
+ul.clean li::before{content:"";position:absolute;left:0;top:.65em;width:8px;height:8px;border-radius:50%;background:var(--violet-d)}
+ul.clean li b{color:var(--offwhite)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.card{background:var(--navy-3);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
+.card h4{margin:0 0 6px;font-size:14px;font-weight:700}
+.card p{font-size:14px;color:var(--dim)}
+.card .num{display:inline-block;background:var(--violet);color:var(--white);font-weight:700;border-radius:6px;padding:0 8px;margin-bottom:8px;font-size:12px}
+.card.v{border-color:var(--border-v)}
+.card.g{border-top:3px solid var(--green)}.card.a{border-top:3px solid var(--amber)}.card.r{border-top:3px solid var(--red)}
+.fig{background:var(--navy);border:1px solid var(--border);border-radius:12px;padding:14px;margin-top:14px;overflow-x:auto}
+.fig svg{display:block;width:100%;height:auto;max-width:100%;font-family:var(--body)}
+.fig figcaption{font-size:12px;color:var(--dim2);margin-top:8px}
+.compare{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.msg{border-radius:10px;padding:14px 16px;font-size:14px;border:1px solid var(--border);background:var(--navy-3);color:var(--dim)}
+.msg.bad{border-color:rgba(224,82,82,.5)}.msg.good{border-color:rgba(29,188,138,.5)}
+.msg .lbl{font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;margin-bottom:6px;display:block}
+.msg.bad .lbl{color:var(--red)}.msg.good .lbl{color:var(--green)}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;background:var(--navy-3);border:1px solid var(--border);border-radius:10px;padding:11px 14px;color:var(--offwhite);width:100%;font-size:14px}
+.opt:hover{border-color:var(--violet)}
+.opt.sel{border-color:var(--violet);background:rgba(117,112,255,.16)}
+.opt.correct{border-color:var(--green);background:rgba(29,188,138,.12)}
+.opt.wrong.sel{border-color:var(--red)}
+.opt .key{flex:0 0 26px;height:26px;border-radius:50%;background:var(--navy);border:1px solid var(--border);display:grid;place-items:center;font-weight:700;font-size:12px;color:var(--dim)}
+.opt.sel .key{background:var(--violet);color:var(--white);border-color:var(--violet)}
+.opt .cnt{margin-left:auto;font-variant-numeric:tabular-nums;font-weight:700;color:var(--dim2);white-space:nowrap}
+.bar{height:6px;background:var(--navy);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--violet);width:0;transition:width .4s}
+.bar i.ok{background:var(--green)}
+.hint{font-size:13px;color:var(--dim2);margin-top:10px}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--dim2);margin-top:12px}
+.status b{width:8px;height:8px;border-radius:50%;background:var(--amber);display:inline-block}
+.status.saved b{background:var(--green)}
+textarea,input[type=text]{width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--navy);color:var(--offwhite);resize:vertical}
+textarea:focus,input:focus{border-color:var(--violet);outline:none}
+.wall{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;margin-top:14px}
+.note{background:var(--navy-3);border:1px solid var(--border-v);border-radius:10px;padding:12px 14px;font-size:14px;min-height:70px;color:var(--offwhite)}
+.note .who{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l);margin-bottom:4px}
+.note.ex{border-color:var(--border);color:var(--dim)}
+.scen{background:var(--navy-3);border-left:3px solid var(--violet);border-radius:8px;padding:12px 16px;margin-bottom:10px;font-size:15px}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.tabs button{border:1px solid var(--border);background:var(--navy-3);color:var(--offwhite);border-radius:8px;padding:6px 14px;font-weight:600;font-size:13px}
+.tabs button.on{background:var(--violet);color:var(--white);border-color:var(--violet)}
+.tabs button.done::after{content:" ✓";color:var(--green)}
+.rtable{width:100%;border-collapse:collapse;font-size:14px}
+.rtable th,.rtable td{padding:9px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.rtable th{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l);font-weight:700}
+.rtable td{color:var(--dim)}.rtable td b{color:var(--offwhite)}
+.scale{display:inline-flex;gap:4px}
+.scale button{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--navy);color:var(--offwhite);font-weight:700}
+.scale button.on{background:var(--violet);color:var(--white);border-color:var(--violet)}
+.heat{display:inline-block;min-width:44px;text-align:center;border-radius:6px;padding:2px 6px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--navy)}
+.tscroll{overflow-x:auto}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:8px;padding:9px 16px;font-weight:700;background:var(--violet);color:var(--white);font-size:14px}
+.btn.ghost{background:var(--navy-3);color:var(--offwhite);border:1px solid var(--border)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+.pill{display:inline-block;border-radius:8px;padding:2px 10px;font-size:12px;font-weight:700;background:var(--navy-3);border:1px solid var(--border)}
+.pill.g{color:var(--green)}.pill.a{color:var(--amber)}.pill.r{color:var(--red)}.pill.v{color:var(--violet-l);border-color:var(--border-v)}
+.locked{text-align:center;padding:24px;border:1px dashed var(--border-v);border-radius:10px;color:var(--dim2);font-size:14px}
+.quad{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.quad .q{background:var(--navy-3);border:1px dashed var(--border-v);border-radius:10px;padding:10px;min-height:90px}
+.quad .q h4{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l);margin-bottom:6px}
+.quad .q p{font-size:12px;color:var(--dim2);margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--border);background:var(--navy);color:var(--offwhite);border-radius:8px;padding:4px 10px;font-size:13px;font-weight:600}
+.chip.sel{border-color:var(--violet);background:rgba(117,112,255,.2)}
+.chip.ok{border-color:var(--green)}.chip.no{border-color:var(--red)}
+.chip small{color:var(--dim2);font-weight:400;margin-left:4px}
+/* Selbsteinschätzung & Plan */
+.sc{display:grid;gap:8px}
+.sc .it{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;background:var(--navy-3);border:1px solid var(--border);border-radius:10px;padding:10px 14px}
+.sc .it b{font-size:14px;display:block}.sc .it small{color:var(--dim2);font-size:12px}
+@media (max-width:600px){.sc .it{grid-template-columns:1fr}}
+.prof{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:10px}
+.prof .card b{font-size:16px;display:block;margin-top:4px}
+.form{display:grid;gap:12px;margin-top:12px}
+.form label{display:grid;gap:4px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l)}
+.form label span{font-weight:400;letter-spacing:0;text-transform:none;color:var(--dim2);font-size:12px}
+input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;background:var(--navy);color:var(--offwhite);color-scheme:dark;max-width:220px}
+.qc{display:grid;gap:6px;margin-top:12px;font-size:13px}
+.qc div{display:flex;gap:8px;align-items:center;color:var(--dim2)}
+.qc div.ok{color:var(--green)}.qc div::before{content:"○";font-weight:700}.qc div.ok::before{content:"✓"}
+.sug{display:grid;gap:8px;margin-top:8px}
+.sug button{text-align:left;background:var(--navy);border:1px dashed var(--border-v);border-radius:10px;padding:10px 12px;color:var(--offwhite);font-size:13px}
+.sug button:hover{border-style:solid}
+.sug button small{display:block;color:var(--dim2);margin-top:3px}
+.plan-card{background:var(--navy-3);border:1px solid var(--border-v);border-radius:10px;padding:12px 14px;font-size:13px;display:grid;gap:6px}
+.plan-card .who{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--violet-l)}
+.plan-card .k{color:var(--dim2);font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.seg{display:inline-flex;gap:4px;flex-wrap:wrap}
+.seg button{border:1px solid var(--border);background:var(--navy);color:var(--offwhite);border-radius:8px;padding:5px 10px;font-size:13px}
+.seg button.on{background:var(--violet);border-color:var(--violet);color:var(--white)}
+.results{border-top:1px solid var(--border-v);padding-top:18px;margin-top:34px}
+.overlay{position:fixed;inset:0;background:rgba(14,22,32,.92);z-index:50;display:grid;place-items:center;padding:16px}
+.overlay .box{background:var(--navy-2);border:1px solid var(--border-v);border-radius:12px;padding:24px;width:min(380px,100%);display:grid;gap:12px}
+.overlay h2{font-size:18px}
+.overlay .err{color:var(--red);font-size:13px;min-height:1em}
+/* Trainer-Regie */
+.side{min-width:0;display:grid;gap:12px;align-content:start}
+.sbox{background:var(--navy-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--dim)}
+.sbox h4{margin:0 0 8px;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--violet-l);font-weight:700}
+.sbox ol,.sbox ul{margin:0;padding-left:20px;display:grid;gap:5px}
+.sbox.t{border-color:var(--border-v);background:var(--navy-3)}
+.timer{display:flex;align-items:baseline;gap:10px;font-variant-numeric:tabular-nums}
+.timer b{font-size:30px;font-weight:800;color:var(--white)}
+.timer.over b{color:var(--red)}
+.timer small{color:var(--dim2);font-size:12px}
+.plan{display:grid;gap:2px;font-size:12px}
+.plan div{display:flex;gap:8px;padding:3px 6px;border-radius:6px}
+.plan div.cur{background:rgba(117,112,255,.2);font-weight:700;color:var(--white)}
+.plan div.past{opacity:.5}
+.plan div.o{color:var(--amber)}
+.plan span:first-child{width:36px;color:var(--dim2);font-variant-numeric:tabular-nums}
+.tally{display:grid;gap:6px}
+.tally div{display:flex;gap:8px;align-items:center;font-size:13px}
+.tally div span{flex:1;min-width:0}
+.tally button{width:28px;height:28px;border-radius:8px;border:1px solid var(--border);background:var(--navy);color:var(--offwhite);font-weight:700}
+.bridge{font-style:italic;color:var(--dim2);border-left:2px solid var(--violet-d);padding-left:10px}
+.expert{border-left:2px solid var(--green);padding-left:10px}
+/* Navigation */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--navy);border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+.nav .dots{flex:1;display:flex;gap:3px;min-width:0;overflow-x:auto;padding:4px 0}
+.nav .dots button{flex:1 0 10px;height:8px;border-radius:4px;border:0;background:var(--navy-3);padding:0;min-width:10px}
+.nav .dots button.on{background:var(--violet)}
+.nav .dots button.done{background:var(--violet-d)}
+.nav .dots button.o{outline:1px dashed var(--amber);outline-offset:-1px}
+.nav .cnt{font-variant-numeric:tabular-nums;font-size:13px;color:var(--dim2);white-space:nowrap}
+.follow{font-size:12px;color:var(--dim2);display:flex;gap:6px;align-items:center}
+.follow input{accent-color:var(--violet)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="mark"></span>Scaled Innovation <small>· PM-Training für lern.link</small></div>
+  <span class="badge" id="modeBadge">Teilnehmer</span>
+  <span class="spacer"></span>
+  <span class="clock" id="clock" hidden></span>
+  <button id="previewBtn" hidden title="Teilnehmersicht ein/aus">Teilnehmersicht</button>
+  <button id="myResetBtn" title="Alle meine Antworten in diesem Training löschen">Meine Antworten löschen</button>
+  <button id="logoutBtn" hidden>Abmelden</button>
+</header>
+
+<div class="overlay" id="loginBox" hidden><form class="box" id="loginForm"><h2>Trainer-Anmeldung</h2><p class="hint" style="margin:0">Nur für die Trainer-Ansicht. Teilnehmer brauchen keine Anmeldung – einfach den Link ohne „#trainer“ öffnen.</p><label class="form" style="margin:0"><span style="font-size:12px;color:var(--violet-l);font-weight:700;letter-spacing:.1em">E-MAIL</span><input type="email" id="loginMail" required autocomplete="username"></label><label class="form" style="margin:0"><span style="font-size:12px;color:var(--violet-l);font-weight:700;letter-spacing:.1em">PASSWORT</span><input type="password" id="loginPw" required autocomplete="current-password" style="width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--navy);color:var(--offwhite)"></label><div class="err" id="loginErr"></div><div class="row"><button class="btn" type="submit">Anmelden</button><button class="btn ghost" type="button" id="loginCancel">Abbrechen</button></div></form></div>
+<div class="overlay" id="cfgBox" hidden><div class="box"><h2>Konfiguration fehlt</h2><p class="hint" style="margin:0">In <code>config.js</code> müssen SUPABASE_URL und SUPABASE_ANON_KEY eingetragen sein (Supabase → Project Settings → API). Ohne Verbindung läuft die Seite nur lokal auf diesem Gerät.</p><button class="btn ghost" id="cfgClose">Trotzdem lokal öffnen</button></div></div>
+<main class="wrap" id="wrap">
+  <section class="stage" id="stage" aria-live="polite"></section>
+  <aside class="side" id="side" hidden></aside>
+</main>
+
+<nav class="nav">
+  <button class="btn ghost sm" id="prevBtn">‹ Zurück</button>
+  <div class="dots" id="dots"></div>
+  <span class="cnt" id="cnt">1 / 1</span>
+  <label class="follow" id="followBox"><input type="checkbox" id="follow" checked> Trainer folgen</label>
+  <input type="text" id="nickIn" placeholder="Dein Name" maxlength="40" style="width:130px;padding:6px 10px;font-size:13px" title="Dein Name, wie er in den Ergebnissen erscheint">
+
+  <button class="btn sm" id="nextBtn">Weiter ›</button>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.0/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script src="shim.js"></script>
+<script src="viz.js"></script>
+<script src="slides1.js"></script>
+<script src="slides2.js"></script>
+<script src="slides3.js"></script>
+<script>
+const SLIDES=window.SLIDES||[];
+const $=s=>document.querySelector(s);
+let db=null,userCap=null,uid=null,isOwner=false,preview=false;
+let cur=0, follow=true, localOnly=false;
+const SESSION0=()=>({slide:0,reveal:{},startedAt:{},tally:{},notes:{}});
+let session=SESSION0();
+const clone=o=>JSON.parse(JSON.stringify(o));
+function mergeSession(d){const c=clone(d||{});session=Object.assign(SESSION0(),c);for(const k of ['reveal','startedAt','tally','notes'])if(!session[k]||typeof session[k]!=='object')session[k]={};}
+let mine={a:{}}; let all={}; let names={};
+let pid='',nick='';
+try{pid=localStorage.getItem('pm.pid')||'';nick=localStorage.getItem('pm.nick')||'';}catch(e){}
+if(!pid){pid=Math.random().toString(36).slice(2,10);try{localStorage.setItem('pm.pid',pid);}catch(e){}}
+try{const m=JSON.parse(localStorage.getItem('pm.mine')||'null');if(m&&m.a)mine=m;}catch(e){}
+function persistLocal(){try{localStorage.setItem('pm.mine',JSON.stringify(mine));}catch(e){}}
+/* Ergebnis-Code: alle eigenen Antworten als Text für den Meeting-Chat */
+const b64e=o=>btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(o)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const b64d=t=>JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(t.replace(/-/g,'+').replace(/_/g,'/')),c=>c.charCodeAt(0))));
+function myCode(){return 'PM1.'+pid+'.'+b64e({n:nick,a:mine.a});}
+function parseCodes(text){const out=[];const re=/PM1\.([a-z0-9]{4,16})\.([A-Za-z0-9_-]{4,})/g;let m;while((m=re.exec(text))){try{const d=b64d(m[2]);if(d&&d.a&&typeof d.a==='object')out.push({id:'c_'+m[1],nick:String(d.n||'').slice(0,40),a:d.a});}catch(e){}}return out;}
+let writeChain=Promise.resolve(); let saveTimer=null; let saveState='idle';
+const tabState={};
+try{const f=localStorage.getItem('pm.follow');if(f!==null)follow=f==='1';}catch(e){}
+function slideStart(i){let m=0;for(let k=0;k<i;k++)if(!SLIDES[k].opt)m+=SLIDES[k].min;return m;}
+const CORE=SLIDES.reduce((a,s)=>a+(s.opt?0:s.min),0), OPT=SLIDES.reduce((a,s)=>a+(s.opt?s.min:0),0);
+
+/* Persistenz */
+function queueSave(){saveState='pending';renderStatus();clearTimeout(saveTimer);saveTimer=setTimeout(saveMine,500);}
+function saveMine(){
+  if(isOwner){saveState='trainer';renderStatus();return;}
+  persistLocal();
+  if(!db||!uid||localOnly){saveState='local';renderStatus();return;}
+  writeChain=writeChain.then(()=>db.doc('answers/'+uid).set({a:mine.a,nick:nick})).then(()=>{saveState='saved';renderStatus();}).catch(e=>{
+    if(e&&e.code==='invalid_argument'){localOnly=true;saveState='local';}else{saveState='error';}renderStatus();});
+}
+function saveSession(){if(!db||!isOwner)return;const snapS=clone(session);writeChain=writeChain.then(()=>db.doc('session/state').set(snapS)).catch(e=>{const m=$('#resetMsg');if(m)m.textContent='Sitzung konnte nicht gespeichert werden ('+(e&&e.code||'?')+').';});}
+function setSession(fn){fn(session);saveSession();render();}
+
+/* Ergebnisse */
+function answersFor(sid){const out=[];for(const id in all){const v=all[id]&&all[id].a&&all[id].a[sid];if(v!==undefined&&v!==null&&v!=='')out.push({uid:id,val:v});}
+  if(!isOwner&&mine.a[sid]!==undefined&&(!uid||!all[uid]))out.push({uid:uid||'me',val:mine.a[sid]});return out;}
+function counts(sid,n,pick){const c=new Array(n).fill(0);answersFor(sid).forEach(x=>pick(x.val).forEach(i=>{if(i>=0&&i<n)c[i]++;}));
+  const t=session.tally[sid]||{};for(const k in t)if(+k<n)c[+k]+=t[k];return c;}
+let FORCE=null,RESULTS=false;
+function revealed(s){if(FORCE!==null)return FORCE;return !!session.reveal[s.id];}
+function bodyOf(s){return RESULTS?'':(s.body||'');}
+function extraOf(s){return RESULTS?'':(s.extra||'');}
+function nm(id){const p=names[id];const r=all[id];return (p&&p.name)||(r&&r.nick)||'Teilnehmer:in';}
+function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+const K=i=>String.fromCharCode(65+i);
+
+/* Rendering */
+function render(){
+  const s=SLIDES[cur];const st=$('#stage');
+  let h=`<div class="eyebrow">${cur+1} / ${SLIDES.length} · ${s.title} · ${s.min} Min${s.opt?' · <span class="opt">Vertiefung</span>':''}</div><h1>${s.h}</h1>`;
+  if(s.lead)h+=`<p class="lead">${s.lead}</p>`;
+  const R={content:rContent,poll:rPoll,quiz:rQuiz,scenario:rScen,rewrite:rRewrite,risk:rRisk,multi:rMulti,text:rText,check:rCheck,quad:rQuad,selfcheck:rSelfcheck,plan:rPlan};
+  if(isOwner&&!preview&&s.kind!=='content'){
+    FORCE=false;RESULTS=false;h+=R[s.kind](s);
+    FORCE=true;RESULTS=true;h+=`<div class="block results"><div class="eyebrow" style="margin-bottom:6px">Ergebnisse · ${session.reveal[s.id]?'für Teilnehmer freigegeben':'nur du siehst das'}</div>`+R[s.kind](s)+`</div>`;
+    FORCE=null;RESULTS=false;
+  }else h+=R[s.kind](s);
+  st.innerHTML=h;bind(s);
+  $('#cnt').textContent=`${cur+1} / ${SLIDES.length}`;
+  $('#prevBtn').disabled=cur===0;$('#nextBtn').disabled=cur===SLIDES.length-1;
+  const d=$('#dots');d.innerHTML=SLIDES.map((x,i)=>`<button data-i="${i}" class="${i===cur?'on':(i<session.slide?'done':'')} ${x.opt?'o':''}" title="${x.title}" aria-label="${x.title}"></button>`).join('');
+  d.querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.i,true));
+  renderSide();renderStatus();
+}
+function rContent(s){return bodyOf(s)+extraOf(s);}
+function statusHtml(){return RESULTS?'':`<div class="status" id="saveStatus"><b></b><span></span></div>`;}
+function renderStatus(){const el=$('#saveStatus');if(!el)return;
+  const map={idle:'',trainer:'Trainer-Eingabe: nur zur Vorschau, zählt nicht ins Teamergebnis',pending:'Wird gespeichert …',saved:'Gespeichert – der Trainer sieht deine Antwort',local:'Auf diesem Gerät gespeichert.',error:'Auf diesem Gerät gespeichert.'};
+  el.className='status'+(saveState==='saved'?' saved':'');el.lastElementChild.textContent=map[saveState]||'';el.hidden=!map[saveState];}
+function resultBars(sid,opts,picker,correct){const c=counts(sid,opts.length,picker);const mx=Math.max(1,...c);
+  return opts.map((o,i)=>`<div class="opt ${correct===i?'correct':''}" style="cursor:default"><span class="key">${K(i)}</span><span style="flex:1;min-width:0">${o}<div class="bar"><i class="${correct===i?'ok':''}" style="width:${c[i]/mx*100}%"></i></div></span><span class="cnt">${c[i]}</span></div>`).join('');}
+function rPoll(s){const v=mine.a[s.id]||[];let h=bodyOf(s)+`<div class="block"><h3>${s.q}</h3>`;
+  if(revealed(s))h+=`<div class="opts">${resultBars(s.id,s.opts,x=>Array.isArray(x)?x:[],s.correct)}</div>`+(s.why?`<p class="hint">${s.why}</p>`:'');
+  else{h+=`<div class="opts">`+s.opts.map((o,i)=>`<button class="opt ${v.includes(i)?'sel':''}" data-i="${i}"><span class="key">${K(i)}</span><span>${o}</span></button>`).join('')+`</div>`;if(s.max>1)h+=`<p class="hint">Bis zu ${s.max} Antworten.</p>`;}
+  return h+statusHtml()+`</div>`+extraOf(s);}
+function rQuiz(s){const v=mine.a[s.id]||{};const rev=revealed(s);let h=bodyOf(s);
+  s.qs.forEach((q,qi)=>{h+=`<div class="block"><h3>${qi+1}. ${q.q}</h3>`;
+    if(rev)h+=`<div class="opts">${resultBars(s.id+'.'+qi,q.opts,x=>[x],q.c)}</div><p class="hint">${q.why}</p>`;
+    else h+=`<div class="opts">`+q.opts.map((o,i)=>`<button class="opt ${v[qi]===i?'sel':''}" data-q="${qi}" data-i="${i}"><span class="key">${K(i)}</span><span>${o}</span></button>`).join('')+`</div>`;
+    h+=`</div>`;});return h+statusHtml();}
+function rScen(s){const v=mine.a[s.id]||{};const tab=+(tabState[s.id]||0);const sc=s.scen[tab];const rev=revealed(s);const a=v[tab]||{};
+  let h=`<div class="tabs">`+s.scen.map((x,i)=>`<button data-t="${i}" class="${i===tab?'on':''} ${v[i]&&v[i].n!==undefined?'done':''}">Fall ${i+1}</button>`).join('')+`</div><div class="scen">${sc.t}</div>`;
+  h+=`<div class="block"><h3>Wer hat den Ball?</h3>`;
+  if(rev)h+=`<div class="opts">${resultBars(s.id+'.'+tab+'.b',s.roles,x=>[x],sc.ball)}</div>`;
+  else h+=`<div class="opts" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">`+s.roles.map((r,i)=>`<button class="opt ${a.b===i?'sel':''}" data-k="b" data-i="${i}"><span class="key">${K(i)}</span><span>${r}</span></button>`).join('')+`</div>`;
+  h+=`</div><div class="block"><h3>Was ist der nächste gute Schritt?</h3>`;
+  if(rev)h+=`<div class="opts">${resultBars(s.id+'.'+tab+'.n',sc.next,x=>[x],sc.c)}</div><p class="hint">${sc.why}</p>`;
+  else h+=`<div class="opts">`+sc.next.map((o,i)=>`<button class="opt ${a.n===i?'sel':''}" data-k="n" data-i="${i}"><span class="key">${i+1}</span><span>${o}</span></button>`).join('')+`</div>`;
+  return h+`</div>`+statusHtml();}
+function rRewrite(s){const v=mine.a[s.id]||{};const rev=revealed(s);let h='';
+  s.msgs.forEach((m,i)=>{h+=`<div class="block"><h3>Nachricht ${i+1} · ${m.ctx}</h3>`+(RESULTS?'':`<div class="msg bad"><span class="lbl">Vorher</span>${m.bad}</div><textarea id="rw${i}" rows="4" placeholder="Deine Version …" style="margin-top:10px">${esc(v[i]||'')}</textarea>`);
+    if(rev)h+=`<div class="wall">`+answersFor(s.id).filter(x=>x.val[i]).map(x=>`<div class="note"><div class="who">${esc(nm(x.uid))}</div>${esc(x.val[i])}</div>`).join('')+(session.notes[s.id+'.'+i]||[]).map(t=>`<div class="note"><div class="who">Zuruf</div>${esc(t)}</div>`).join('')+`</div><div class="msg good" style="margin-top:12px"><span class="lbl">Eine mögliche Lösung</span>${m.model}</div>`;
+    h+=`</div>`;});return h+statusHtml();}
+function heat(sc){if(typeof sc!=='number'||!sc)return 'var(--navy-3)';return sc>=6?'var(--red)':sc>=4?'var(--amber)':'var(--green)';}
+function rRisk(s){const v=mine.a[s.id]||{};const rev=revealed(s);const tab=tabState[s.id]||'rate';let h='';
+  if(rev)h+=`<div class="tabs"><button data-t="rate" class="${tab==='rate'?'on':''}">Bewertung</button><button data-t="m" class="${tab==='m'?'on':''}">Maßnahmen</button></div>`;
+  h+=`<div class="tscroll"><table class="rtable"><tr><th style="min-width:220px">Risiko</th><th>Wahrsch.</th><th>Auswirkung</th><th>${rev?'Team Ø':'Score'}</th>${rev&&tab==='m'?'<th style="min-width:260px">Maßnahme</th>':''}</tr>`;
+  s.risks.forEach((r,i)=>{const a=v[i]||{};let cell='';
+    if(rev){const xs=answersFor(s.id).map(x=>x.val[i]).filter(x=>x&&x.w&&x.a);const n=xs.length;const aw=n?xs.reduce((q,x)=>q+x.w,0)/n:0,aa=n?xs.reduce((q,x)=>q+x.a,0)/n:0,sc=aw*aa;
+      cell=`<td>${n?aw.toFixed(1):'–'}</td><td>${n?aa.toFixed(1):'–'}</td><td><span class="heat" style="background:${heat(sc)}">${n?sc.toFixed(1):'–'}</span> <small style="color:var(--dim2)">n=${n}</small></td>${tab==='m'?`<td style="font-size:13px">${r.m}</td>`:''}`;}
+    else{const score=a.w&&a.a?a.w*a.a:'–';cell=`<td><span class="scale">${[1,2,3].map(k=>`<button data-r="${i}" data-k="w" data-v="${k}" class="${a.w===k?'on':''}">${k}</button>`).join('')}</span></td><td><span class="scale">${[1,2,3].map(k=>`<button data-r="${i}" data-k="a" data-v="${k}" class="${a.a===k?'on':''}">${k}</button>`).join('')}</span></td><td><span class="heat" style="background:${heat(score)}">${score}</span></td>`;}
+    h+=`<tr><td>${r.t}</td>${cell}</tr>`;});
+  return h+`</table></div><p class="hint">Score = Wahrscheinlichkeit × Auswirkung. Ab 6: Maßnahme nötig. 4–5: beobachten.</p>`+statusHtml();}
+function rMulti(s){const v=mine.a[s.id]||{};const rev=revealed(s);let h=bodyOf(s);
+  s.items.forEach((it,qi)=>{h+=`<div class="block"><h3>${it.q}</h3>`;
+    if(rev)h+=`<div class="opts">${resultBars(s.id+'.'+qi,it.opts,x=>[x],it.rec)}</div>`;
+    else h+=`<div class="opts" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">`+it.opts.map((o,i)=>`<button class="opt ${v[qi]===i?'sel':''}" data-q="${qi}" data-i="${i}"><span class="key">${K(i)}</span><span>${o}</span></button>`).join('')+`</div>`;h+=`</div>`;});
+  if(rev&&s.recNote)h+=`<p class="hint">${s.recNote}</p>`;return h+statusHtml();}
+function rText(s){const v=mine.a[s.id]||'';const rev=revealed(s);
+  let h=(RESULTS?'':`<textarea id="tx" rows="3" placeholder="${s.ph}">${esc(v)}</textarea>`)+statusHtml()+`<div class="block"><h3>${rev?s.wallTitle:'Zur Orientierung'}</h3><div class="wall">`;
+  if(rev)h+=answersFor(s.id).map(x=>`<div class="note"><div class="who">${esc(nm(x.uid))}</div>${esc(x.val)}</div>`).join('')+(session.notes[s.id]||[]).map(t=>`<div class="note"><div class="who">Zuruf</div>${esc(t)}</div>`).join('');
+  else h+=s.examples.map(e=>`<div class="note ex"><div class="who">Beispiel</div>${e}</div>`).join('');return h+`</div></div>`;}
+/* Checkliste: mehrere richtige Antworten */
+function rCheck(s){const v=mine.a[s.id]||[];const rev=revealed(s);let h=bodyOf(s)+`<div class="block"><h3>${s.q}</h3>`;
+  if(rev){const c=counts(s.id,s.opts.length,x=>Array.isArray(x)?x:[]);const mx=Math.max(1,...c);
+    h+=`<div class="opts">`+s.opts.map((o,i)=>`<div class="opt ${s.correct.includes(i)?'correct':''}" style="cursor:default"><span class="key">${K(i)}</span><span style="flex:1;min-width:0">${o}<div class="bar"><i class="${s.correct.includes(i)?'ok':''}" style="width:${c[i]/mx*100}%"></i></div></span><span class="cnt">${c[i]}</span></div>`).join('')+`</div><p class="hint">${s.why}</p>`;}
+  else h+=`<div class="opts">`+s.opts.map((o,i)=>`<button class="opt ${v.includes(i)?'sel':''}" data-i="${i}"><span class="key">${K(i)}</span><span>${o}</span></button>`).join('')+`</div><p class="hint">Mehrfachauswahl.</p>`;
+  return h+statusHtml()+`</div>`;}
+/* Quadranten: Elemente einem Feld zuordnen */
+function rQuad(s){const v=mine.a[s.id]||{};const rev=revealed(s);let h=bodyOf(s)+`<div class="block"><h3>${s.q}</h3>`;
+  if(rev){h+=`<div class="quad">`+s.fields.map((f,fi)=>`<div class="q"><h4>${f.t}</h4><p>${f.d}</p><div class="chips">`+s.items.map((it,ii)=>{const c=counts(s.id+'.'+ii,s.fields.length,x=>[x])[fi];return c?`<span class="chip ${it.c===fi?'ok':'no'}">${it.t}<small>×${c}</small></span>`:'';}).join('')+`</div></div>`).join('')+`</div><p class="hint">${s.why}</p>`;}
+  else{h+=`<p class="hint" style="margin:0 0 8px">Tippe erst ein Element an, dann das passende Feld.</p><div class="chips" id="quadChips">`+s.items.map((it,ii)=>`<button class="chip ${tabState[s.id]===ii?'sel':''} ${v[ii]!==undefined?'ok':''}" data-ii="${ii}">${it.t}${v[ii]!==undefined?`<small>→ ${s.fields[v[ii]].t}</small>`:''}</button>`).join('')+`</div><div class="quad">`+s.fields.map((f,fi)=>`<button class="q" data-fi="${fi}" style="text-align:left;color:inherit;font:inherit"><h4>${f.t}</h4><p>${f.d}</p><div class="chips">`+s.items.map((it,ii)=>v[ii]===fi?`<span class="chip">${it.t}</span>`:'').join('')+`</div></button>`).join('')+`</div>`;}
+  return h+statusHtml()+`</div>`;}
+
+/* Selbsteinschätzung: 1–4 je Kompetenz */
+const SC_ID='selfcheck';
+function rSelfcheck(s){const v=mine.a[s.id]||{};const rev=revealed(s);let h=bodyOf(s)+`<div class="block"><h3>${s.q}</h3><p class="hint" style="margin:0 0 10px">${s.scale.map((t,i)=>`<b style="color:var(--offwhite)">${i+1}</b> = ${t}`).join(' · ')}</p><div class="sc">`;
+  s.items.forEach((it,i)=>{let right='';
+    if(rev){const xs=answersFor(s.id).map(x=>x.val[i]).filter(x=>x);const n=xs.length;const avg=n?xs.reduce((a,b)=>a+b,0)/n:0;const t=session.tally[s.id+'.'+i]||{};const lo=t[0]||0,hi=t[1]||0;
+      right=`<span style="min-width:180px;display:grid;gap:3px">${n?`<span><b style="font-size:18px;color:${avg<2?'var(--red)':avg<3?'var(--amber)':'var(--green)'}">${avg.toFixed(1)}</b> <small>Ø · n=${n}</small></span>`:''}${lo||hi?`<span class="pill r">${lo} × Defizit (1–2)</span><span class="pill g">${hi} × Stärke (4)</span>`:''}</span>`;}
+    else right=`<span class="seg">${[1,2,3,4].map(k=>`<button data-i="${i}" data-v="${k}" class="${v[i]===k?'on':''}">${k}</button>`).join('')}</span>`;
+    h+=`<div class="it"><div><b>${it.t}</b><small>${it.d}</small></div>${right}</div>`;});
+  h+=`</div>`+statusHtml()+`</div>`;
+  if(rev&&s.revNote)h+=`<p class="hint">${s.revNote}</p>`;return h;}
+function profile(sid){const sc=SLIDES.find(x=>x.id===SC_ID);const v=mine.a[SC_ID]||{};const rated=sc.items.map((it,i)=>({i,t:it.t,v:v[i]})).filter(x=>x.v);
+  if(!rated.length)return null;const hi=rated.reduce((a,b)=>b.v>=a.v?b:a),lo=rated.reduce((a,b)=>b.v<a.v?b:a);return {hi,lo,all:rated,n:rated.length,items:sc.items};}
+/* Erfolgsturbo-Plan */
+function qcheck(p){const num=/\d/;return [
+  ['Konkret: eine Handlung, nicht ein Vorsatz (≥ 40 Zeichen, enthält eine Zahl oder einen Namen)',(p.act||'').length>=40&&(num.test(p.act)||/[A-ZÄÖÜ][a-zäöü]+/.test(p.act))],
+  ['Terminiert: Datum liegt in den nächsten 6 Wochen',!!p.due&&(new Date(p.due)-Date.now())>0&&(new Date(p.due)-Date.now())<6*7*864e5],
+  ['Messbar: Erfolgskriterium mit Zahl oder Ja/Nein-Prüfung (≥ 25 Zeichen)',(p.crit||'').length>=25&&(num.test(p.crit)||/\b(alle|kein|jede|0|null)\b/i.test(p.crit))],
+  ['Teamnutzen benannt: Wem hilft es wie? (≥ 20 Zeichen)',(p.team||'').length>=20]];}
+function planWall(s){const items=SLIDES.find(x=>x.id===SC_ID).items;const cards=answersFor(s.id).filter(x=>x.val&&x.val.act);
+  return `<div class="wall">`+cards.map(x=>{const q=x.val;const a=items[q.area]?items[q.area].t:'';const st=['Noch nicht begonnen','Teilweise','Umgesetzt'][q.status];return `<div class="plan-card"><div class="who">${esc(nm(x.uid))} · ${esc(a)}</div><div>${esc(q.act)}</div><div><span class="k">Bis</span> ${esc(q.due||'–')} · <span class="k">Erfolg</span> ${esc(q.crit||'–')}</div><div><span class="k">Turbo</span> ${esc(q.team||'–')}</div>${st?`<span class="pill ${q.status===2?'g':q.status===1?'a':'r'}">${st}</span>`:''}</div>`;}).join('')+(session.notes[s.id]||[]).map(t=>`<div class="plan-card"><div class="who">Zuruf</div>${esc(t)}</div>`).join('')+(cards.length?'':'<div class="locked">Noch keine Pläne eingegangen.</div>')+`</div>`;}
+function rPlan(s){const p=Object.assign({},mine.a[s.id]||{});const rev=revealed(s);const pr=profile();
+  if(RESULTS)return `<h3>Die Erfolgsturbos des Teams</h3>`+planWall(s)+(isOwner?`<div class="row" style="margin-top:12px"><button class="btn sm ghost" id="exportBtn">Alle Pläne für den Folgetermin kopieren</button><span class="hint" id="exportMsg" style="margin:0"></span></div>`:'');
+  let h=s.body||'';
+  h+=`<div class="block"><h3>1 · Mein Profil aus der Selbsteinschätzung</h3>`;
+  if(pr)h+=`<div class="prof"><div class="card g"><span class="k" style="color:var(--green);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700">Meine Stärke</span><b>${pr.hi.t}</b><p>${pr.hi.v} von 4 – das ist dein Beitrag für die anderen.</p></div><div class="card r"><span style="color:var(--red);font-size:11px;letter-spacing:.1em;text-transform:uppercase;font-weight:700">Mein größtes Defizit</span><b>${pr.lo.t}</b><p>${pr.lo.v} von 4 – hier liegt der größte Hebel.</p></div></div>`;
+  else h+=`<div class="locked">Fülle zuerst die Selbsteinschätzung (Folie „Standortbestimmung“) aus – dann erscheint hier dein Profil.</div>`;
+  const area=p.area!==undefined?p.area:(pr?pr.lo.i:undefined);const items=SLIDES.find(x=>x.id===SC_ID).items;
+  h+=`</div><div class="block"><h3>2 · Mein Fokus</h3><p class="hint" style="margin:0 0 8px">Vorbelegt mit deinem größten Defizit. Du darfst abweichen – wenn ein anderer Bereich für das Team den größeren Turbo bringt.</p><div class="chips">`+items.map((it,i)=>`<button class="chip ${area===i?'sel':''}" data-area="${i}">${it.t}</button>`).join('')+`</div>`;
+  if(area!==undefined){h+=`<p class="hint" style="margin:12px 0 0">Vorschläge für diesen Bereich – antippen übernimmt Aktivität und Erfolgskriterium, danach anpassen:</p><div class="sug">`+(s.sug[area]||[]).map((g,gi)=>`<button data-sug="${gi}"><b>${g.a}</b><small>Erfolg: ${g.c}</small></button>`).join('')+`</div>`;}
+  h+=`</div><div class="block"><h3>3 · Die eine Optimierung</h3><div class="form">
+   <label>Was genau tue ich? <span>Eine Handlung mit Zahl, Name oder Ort. Kein „mehr“, „besser“, „regelmäßig“.</span><textarea id="pAct" rows="3" placeholder="Ich werde …">${esc(p.act||'')}</textarea></label>
+   <label>Bis wann? <span>Ein Datum, das vor dem Folgetermin liegt.</span><input type="date" id="pDue" value="${esc(p.due||'')}"></label>
+   <label>Woran erkennt man, dass ich es geschafft habe? <span>Etwas, das eine Kollegin am Folgetermin in Odoo oder im Postfach nachschauen kann.</span><textarea id="pCrit" rows="2" placeholder="Am Folgetermin ist sichtbar, dass …">${esc(p.crit||'')}</textarea></label>
+   <label>Warum ist das ein Erfolgsturbo für lern.link? <span>Wem im Team nimmt es welche Arbeit oder welches Risiko ab?</span><textarea id="pTeam" rows="2" placeholder="Das hilft …">${esc(p.team||'')}</textarea></label></div>
+   <div class="qc">`+qcheck(p).map(([t,ok])=>`<div class="${ok?'ok':''}">${t}</div>`).join('')+`</div>`+statusHtml()+`</div>`;
+  if(s.showStatus||rev){h+=`<div class="block"><h3>4 · Status beim Folgetermin</h3><p class="hint" style="margin:0 0 8px">Erst beim Folgetermin ausfüllen.</p><span class="seg">${['Noch nicht begonnen','Teilweise umgesetzt','Umgesetzt – Kriterium erfüllt'].map((t,i)=>`<button data-st="${i}" class="${p.status===i?'on':''}">${t}</button>`).join('')}</span></div>`;}
+  if(!isOwner&&(localOnly||!db)){const ok=qcheck(p).every(x=>x[1]);h+=`<div class="block"><h3>5 · Plan an den Trainer senden</h3><p class="hint" style="margin:0 0 8px">${ok?'Dein Plan erfüllt alle vier Kriterien.':'Erst wenn alle vier Haken grün sind.'} Einmal am Ende, damit er beim Folgetermin vorliegt.</p><div class="row"><button class="btn sm" id="planCopy" ${ok?'':'disabled'}>Plan-Text kopieren</button><a class="btn sm ghost" style="text-decoration:none" id="planMail" href="${session.mail?planMailto(p):'#'}" ${session.mail&&ok?'':'hidden'}>E-Mail öffnen</a></div><div class="hint" id="planMsg"></div></div>`;}
+  if(rev&&!isOwner)h+=`<div class="block"><h3>Die Erfolgsturbos des Teams</h3>`+planWall(s)+`</div>`;
+  return h;}
+function planText(p){const items=SLIDES.find(x=>x.id===SC_ID).items;const pr=profile();return `Erfolgsturbo – ${nick||'(Name)'}\nStärke: ${pr?pr.hi.t:'–'}\nDefizit: ${pr?pr.lo.t:'–'}\nFokus: ${items[p.area]?items[p.area].t:'–'}\nAktivität: ${p.act||''}\nBis: ${p.due||''}\nErfolgskriterium: ${p.crit||''}\nTeamnutzen: ${p.team||''}`;}
+function planMailto(p){return 'mailto:'+encodeURIComponent(session.mail)+'?subject='+encodeURIComponent('Mein Erfolgsturbo – '+(nick||''))+'&body='+encodeURIComponent(planText(p));}
+function bind(s){const st=$('#stage');
+  if(s.kind==='selfcheck')st.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{const v=Object.assign({},mine.a[s.id]||{});v[b.dataset.i]=+b.dataset.v;mine.a[s.id]=v;queueSave();render();});
+  if(s.kind==='plan'){const setP=(f)=>{const p=Object.assign({},mine.a[s.id]||{});f(p);mine.a[s.id]=p;queueSave();};
+    st.querySelectorAll('.chip[data-area]').forEach(b=>b.onclick=()=>{setP(p=>p.area=+b.dataset.area);render();});
+    st.querySelectorAll('.sug button').forEach(b=>b.onclick=()=>{const p=mine.a[s.id]||{};const pr=profile();const area=p.area!==undefined?p.area:(pr?pr.lo.i:0);const g=s.sug[area][+b.dataset.sug];setP(q=>{q.area=area;q.act=g.a;q.crit=g.c;});render();});
+    st.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{setP(p=>p.status=+b.dataset.st);render();});
+    const pc=$('#planCopy');if(pc)pc.onclick=()=>{const t=planText(mine.a[s.id]||{});const m=$('#planMsg');navigator.clipboard.writeText(t).then(()=>m.textContent='Kopiert – in eine Mail oder Chat-Nachricht an den Trainer einfügen.').catch(()=>{m.textContent='Bitte markieren und kopieren:';const ta=document.createElement('textarea');ta.value=t;ta.rows=7;m.appendChild(ta);ta.select();});};
+    const upd=()=>{setP(p=>{p.act=$('#pAct').value;p.due=$('#pDue').value;p.crit=$('#pCrit').value;p.team=$('#pTeam').value;});const q=st.querySelectorAll('.qc div');const qc=qcheck(mine.a[s.id]);qc.forEach(([t,ok],i)=>q[i].classList.toggle('ok',ok));const allOk=qc.every(x=>x[1]);const pc2=$('#planCopy');if(pc2)pc2.disabled=!allOk;const pm=$('#planMail');if(pm){pm.hidden=!(allOk&&session.mail);if(session.mail)pm.href=planMailto(mine.a[s.id]);}};
+    ['pAct','pDue','pCrit','pTeam'].forEach(id=>{const el=$('#'+id);if(el)el.oninput=upd;});}
+  st.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>{tabState[s.id]=b.dataset.t;render();});
+  if(s.kind==='poll'||s.kind==='check')st.querySelectorAll('button.opt').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;let v=(mine.a[s.id]||[]).slice();const max=s.kind==='check'?99:(s.max||1);
+    if(v.includes(i))v=v.filter(x=>x!==i);else{if(max===1)v=[i];else if(v.length<max)v.push(i);else return;}mine.a[s.id]=v;queueSave();render();});
+  if(s.kind==='quiz'||s.kind==='multi')st.querySelectorAll('button.opt').forEach(b=>b.onclick=()=>{const v=Object.assign({},mine.a[s.id]||{});v[b.dataset.q]=+b.dataset.i;mine.a[s.id]=v;queueSave();render();});
+  if(s.kind==='scenario')st.querySelectorAll('button.opt').forEach(b=>b.onclick=()=>{const tab=+(tabState[s.id]||0);const v=Object.assign({},mine.a[s.id]||{});const a=Object.assign({},v[tab]||{});a[b.dataset.k]=+b.dataset.i;v[tab]=a;mine.a[s.id]=v;queueSave();render();});
+  if(s.kind==='rewrite')s.msgs.forEach((m,i)=>{const t=$('#rw'+i);if(t)t.oninput=()=>{const v=Object.assign({},mine.a[s.id]||{});v[i]=t.value;mine.a[s.id]=v;queueSave();};});
+  if(s.kind==='risk')st.querySelectorAll('.scale button').forEach(b=>b.onclick=()=>{const v=Object.assign({},mine.a[s.id]||{});const a=Object.assign({},v[b.dataset.r]||{});a[b.dataset.k]=+b.dataset.v;v[b.dataset.r]=a;mine.a[s.id]=v;queueSave();render();});
+  if(s.kind==='text'){const t=$('#tx');if(t)t.oninput=()=>{mine.a[s.id]=t.value;queueSave();};}
+  if(s.kind==='quad'){st.querySelectorAll('#quadChips .chip').forEach(b=>b.onclick=()=>{tabState[s.id]=+b.dataset.ii;render();});
+    st.querySelectorAll('.quad button.q').forEach(b=>b.onclick=()=>{const ii=tabState[s.id];if(ii===undefined)return;const v=Object.assign({},mine.a[s.id]||{});v[ii]=+b.dataset.fi;mine.a[s.id]=v;tabState[s.id]=undefined;queueSave();render();});}
+}
+
+/* Trainer-Regie */
+let confirmState=null;
+function confirmBtn(id,label,q){return confirmState===id?`<span class="hint" style="margin:0">${q}</span> <button class="btn sm" data-confirm="${id}">Ja, löschen</button> <button class="btn sm ghost" data-cancel="1">Abbrechen</button>`:`<button class="btn sm ghost" data-ask="${id}">${label}</button>`;}
+function say(t){const m=$('#resetMsg');if(m)m.textContent=t;}
+async function doReset(id){
+  if(id==='resetSession'){session=SESSION0();mine={a:{}};saveState='idle';confirmState=null;cur=0;render();
+    if(db){try{await db.doc('session/state').set(clone(session));say('Sitzung zurückgesetzt.');}catch(e){say('Sitzung konnte nicht zurückgesetzt werden ('+(e&&e.code||'?')+').');}}return;}
+  if(id==='resetAnswers'){mine={a:{}};if(!db){all={};render();return;}
+    let ids=Object.keys(all);try{const snap=await db.collection('answers').get();snap.docs.forEach(d=>{if(!ids.includes(d.id))ids.push(d.id);});}catch(e){}
+    let ok=0,fail=0;for(const id of ids){try{await db.doc('answers/'+id).delete();ok++;delete all[id];}catch(e){fail++;}}
+    render();say(ok+' Antwort-Datensätze gelöscht'+(fail?', '+fail+' fehlgeschlagen':'')+'.');}}
+async function importCodes(text){const list=parseCodes(text);if(!list.length){say('Keine Codes gefunden. Ein Code beginnt mit „PM1.“');return;}
+  let ok=0,fail=0;for(const c of list){const doc={a:c.a,nick:c.nick,imported:Date.now()};all[c.id]=doc;if(db){try{await db.doc('answers/'+c.id).set(doc);ok++;}catch(e){fail++;}}else ok++;}
+  render();say(ok+' Codes übernommen ('+list.map(c=>c.nick||c.id).join(', ')+')'+(fail?' – '+fail+' nicht gespeichert':'')+'.');const ta=$('#importIn');if(ta)ta.value='';}
+function exportData(kind){const items=SLIDES.find(x=>x.id===SC_ID).items;const ids=Object.keys(all);const when=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
+  if(kind==='json'){return {name:'pm-training_'+(session.group||'gruppe')+'_'+when+'.json',text:JSON.stringify({exported:new Date().toISOString(),group:session.group||'',session,participants:ids.map(id=>({id,name:nm(id),answers:all[id].a}))},null,1)};}
+  const rows=[['Name','Folie','Frage','Antwort']];
+  ids.forEach(id=>{const a=all[id].a||{};const name=nm(id);SLIDES.forEach(sl=>{const v=a[sl.id];if(v===undefined||v===null||v==='')return;
+    const push=(q,ans)=>rows.push([name,sl.title,q,ans]);
+    if(sl.kind==='poll'||sl.kind==='check')push(sl.q,(Array.isArray(v)?v:[v]).map(i=>sl.opts[i]).join(' | '));
+    else if(sl.kind==='quiz')Object.keys(v).forEach(qi=>push(sl.qs[qi].q,sl.qs[qi].opts[v[qi]]+(v[qi]===sl.qs[qi].c?' ✓':' ✗')));
+    else if(sl.kind==='multi')Object.keys(v).forEach(qi=>push(sl.items[qi].q,sl.items[qi].opts[v[qi]]));
+    else if(sl.kind==='scenario')Object.keys(v).forEach(t=>{const x=v[t];push('Fall '+(+t+1)+' · Ball',sl.roles[x.b]||'');push('Fall '+(+t+1)+' · Schritt',x.n!==undefined?sl.scen[t].next[x.n]:'');});
+    else if(sl.kind==='rewrite')Object.keys(v).forEach(i=>push('Nachricht '+(+i+1),v[i]));
+    else if(sl.kind==='risk')Object.keys(v).forEach(i=>push(sl.risks[i].t,'W='+(v[i].w||'')+' A='+(v[i].a||'')));
+    else if(sl.kind==='quad')Object.keys(v).forEach(i=>push(sl.items[i].t,sl.fields[v[i]].t));
+    else if(sl.kind==='selfcheck')Object.keys(v).forEach(i=>push(sl.items[i].t,v[i]));
+    else if(sl.kind==='text')push('Text',v);
+    else if(sl.kind==='plan'){push('Fokus',items[v.area]?items[v.area].t:'');push('Aktivität',v.act||'');push('Bis',v.due||'');push('Erfolgskriterium',v.crit||'');push('Teamnutzen',v.team||'');push('Status',['offen','teilweise','umgesetzt'][v.status]||'');}});});
+  Object.keys(session.notes||{}).forEach(k=>(session.notes[k]||[]).forEach(t=>rows.push(['Zuruf',k,'',t])));
+  Object.keys(session.tally||{}).forEach(k=>Object.keys(session.tally[k]).forEach(i=>{if(session.tally[k][i])rows.push(['Zähler',k,'Option '+K(+i),session.tally[k][i]]);}));
+  const csv='\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(';')).join('\r\n');
+  return {name:'pm-training_'+(session.group||'gruppe')+'_'+when+'.csv',text:csv};}
+async function doExport(kind){const f=exportData(kind);const dl=await claude.use('downloads');
+  if(dl){try{await dl.save({filename:f.name,data:f.text});say('Export gespeichert: '+f.name);return;}catch(e){}}
+  try{await navigator.clipboard.writeText(f.text);say('Download nicht verfügbar – Export in die Zwischenablage kopiert ('+f.name+').');}catch(e){say('Export fehlgeschlagen – bitte im Desktop-Browser versuchen.');}}
+function renderSide(){const side=$('#side');if(!isOwner||preview){side.hidden=true;$('#wrap').classList.remove('trainer');return;}
+  side.hidden=false;$('#wrap').classList.add('trainer');
+  const s=SLIDES[cur];const n=s.notes||{};const live=session.slide===cur;const started=session.startedAt[s.id];
+  let h=`<div class="sbox t"><h4>Regie</h4><div class="row"><button class="btn sm" id="liveBtn" ${live?'disabled':''}>${live?'Teilnehmer sehen diese Folie':'Diese Folie für alle öffnen'}</button><button class="btn sm ghost" id="revealBtn">${session.reveal[s.id]?'Ergebnis verbergen':'Ergebnis freigeben'}</button></div>
+    <div class="timer ${started&&(Date.now()-started)/60000>s.min?'over':''}" id="timerBox" style="margin-top:10px"><b id="timerVal">${started?fmt(Date.now()-started):'0:00'}</b><small>von ${s.min} Min · ${s.opt?'Vertiefung, nicht im 2h-Kern':'Kernplan ab Minute '+slideStart(cur)}</small></div>
+    <div class="hint">Pfeiltasten blättern. Ergebnisse siehst du hier immer; die Teilnehmer erst nach Freigabe.</div>
+    </div>
+  <div class="sbox t"><h4>Gruppe · Daten</h4>
+    <input type="text" id="groupIn" placeholder="Gruppenname (für Export)" value="${esc(session.group||'')}" style="margin-bottom:8px">
+    <input type="text" id="mailIn" placeholder="Deine E-Mail (für den Plan-Versand am Ende)" value="${esc(session.mail||'')}">
+    <div class="hint" style="margin:6px 0 0">Teilnehmer-Link: diese Adresse ohne „#trainer“. ${Object.keys(all).length} Teilnehmer live verbunden. Zähler nur für Zurufe nötig.</div>
+    <div class="row" style="margin-top:12px;gap:6px"><button class="btn sm ghost" data-export="csv">Export CSV</button><button class="btn sm ghost" data-export="json">Export JSON</button></div>
+    <div class="row" style="margin-top:12px;gap:6px">${confirmBtn('resetSession','Sitzung zurücksetzen','Wirklich? Folie, Freigaben, Timer, Zähler und Zurufe werden gelöscht.')}${confirmBtn('resetAnswers','Alle Teilnehmer-Antworten löschen','Wirklich? Erst exportiert? Alle Antworten, Pläne und Selbsteinschätzungen aller Teilnehmer werden gelöscht.')}</div><div class="hint" id="resetMsg"></div></div>`;
+  if(n.goal)h+=`<div class="sbox"><h4>Ziel</h4>${n.goal}</div>`;
+  if(n.steps)h+=`<div class="sbox"><h4>Ablauf</h4><ol>${n.steps.map(x=>`<li>${x}</li>`).join('')}</ol></div>`;
+  if(n.expert)h+=`<div class="sbox"><h4>Experten-Input</h4><div class="expert">${n.expert}</div></div>`;
+  if(n.bg)h+=`<div class="sbox"><h4>Hintergrund</h4>${n.bg}</div>`;
+  if(n.bridge)h+=`<div class="sbox"><h4>Brücke zur Retro</h4><div class="bridge">${n.bridge}</div></div>`;
+  if(n.ifstuck)h+=`<div class="sbox"><h4>Falls es hakt</h4>${n.ifstuck}</div>`;
+  h+=tallyBox(s);
+  h+=`<div class="sbox"><h4>Zeitplan · Kern ${CORE} Min · Vertiefung +${OPT} Min</h4><div class="plan">${SLIDES.map((x,i)=>`<div class="${i===cur?'cur':(i<cur?'past':'')} ${x.opt?'o':''}"><span>${x.opt?'★':slideStart(i)+"'"}</span><span>${x.title}</span></div>`).join('')}</div></div>`;
+  side.innerHTML=h;
+  $('#mailIn').onchange=e=>setSession(ss=>{ss.mail=e.target.value.trim();});
+  $('#groupIn').onchange=e=>setSession(ss=>{ss.group=e.target.value.trim().replace(/[^\wäöüÄÖÜß-]+/g,'-');});
+  side.querySelectorAll('[data-export]').forEach(b=>b.onclick=()=>doExport(b.dataset.export));
+  side.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{confirmState=b.dataset.ask;renderSide();});
+  side.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{confirmState=null;renderSide();});
+  side.querySelectorAll('[data-confirm]').forEach(b=>b.onclick=()=>{const id=b.dataset.confirm;confirmState=null;doReset(id);});
+  $('#liveBtn').onclick=()=>setSession(ss=>{ss.slide=cur;if(!ss.startedAt[s.id])ss.startedAt[s.id]=Date.now();});
+  $('#revealBtn').onclick=()=>setSession(ss=>{ss.reveal[s.id]=!ss.reveal[s.id];});
+  side.querySelectorAll('.tally button[data-s]').forEach(b=>b.onclick=()=>setSession(ss=>{const k=b.dataset.s;ss.tally[k]=ss.tally[k]||{};ss.tally[k][b.dataset.i]=Math.max(0,(ss.tally[k][b.dataset.i]||0)+(+b.dataset.d));}));
+  const exS=$('#side #exportBtn');if(exS)exS.remove();
+  const ex=$('#exportBtn');if(ex)ex.onclick=()=>{const items=SLIDES.find(x=>x.id===SC_ID).items;const lines=answersFor(s.id).filter(x=>x.val&&x.val.act).map(x=>{const q=x.val;return `${nm(x.uid)} · ${items[q.area]?items[q.area].t:''}\nAktivität: ${q.act}\nBis: ${q.due||'–'}\nErfolgskriterium: ${q.crit||'–'}\nTeamnutzen: ${q.team||'–'}\nStatus: ${['offen','teilweise','umgesetzt'][q.status]||'–'}`;}).concat((session.notes[s.id]||[]).map(t=>'Zuruf: '+t)).join('\n\n');
+    const msg=$('#exportMsg');navigator.clipboard.writeText(lines).then(()=>msg.textContent='Kopiert: '+lines.split('\n\n').length+' Pläne.').catch(()=>{msg.textContent='Zwischenablage nicht verfügbar – Text unten markieren.';const ta=document.createElement('textarea');ta.value=lines;ta.rows=8;msg.appendChild(ta);ta.select();});};
+  const nf=$('#noteForm');if(nf)nf.onsubmit=e=>{e.preventDefault();const t=$('#noteIn').value.trim();if(!t)return;const k=nf.dataset.k;setSession(ss=>{ss.notes[k]=(ss.notes[k]||[]).concat([t]);});};
+}
+function tallyRows(key,opts){return opts.map((o,i)=>`<div><span>${K(i)} ${o.length>60?o.slice(0,58)+'…':o}</span><button data-s="${key}" data-i="${i}" data-d="-1">−</button><b style="width:20px;text-align:center;color:var(--white)">${(session.tally[key]||{})[i]||0}</b><button data-s="${key}" data-i="${i}" data-d="1">+</button></div>`).join('');}
+function tallyBox(s){let inner='';
+  if(s.kind==='poll'||s.kind==='check')inner=tallyRows(s.id,s.opts);
+  else if(s.kind==='quiz')inner=s.qs.map((q,i)=>`<div style="font-weight:700;margin-top:6px">Frage ${i+1}</div>`+tallyRows(s.id+'.'+i,q.opts)).join('');
+  else if(s.kind==='multi')inner=s.items.map((q,i)=>`<div style="font-weight:700;margin-top:6px">${i+1}. ${q.q}</div>`+tallyRows(s.id+'.'+i,q.opts)).join('');
+  else if(s.kind==='scenario'){const t=+(tabState[s.id]||0);inner=`<div style="font-weight:700">Fall ${t+1} · Ball</div>`+tallyRows(s.id+'.'+t+'.b',s.roles)+`<div style="font-weight:700;margin-top:6px">Fall ${t+1} · Schritt</div>`+tallyRows(s.id+'.'+t+'.n',s.scen[t].next.map((x,i)=>'Schritt '+(i+1)));}
+  else if(s.kind==='quad')inner=s.items.map((it,i)=>`<div style="font-weight:700;margin-top:6px">${it.t}</div>`+tallyRows(s.id+'.'+i,s.fields.map(f=>f.t))).join('');
+  else if(s.kind==='text')inner=`<form id="noteForm" data-k="${s.id}" class="row"><input type="text" id="noteIn" placeholder="Zuruf eintragen …" style="flex:1"><button class="btn sm">Hinzufügen</button></form>`;
+  else if(s.kind==='selfcheck')inner=`<div class="hint" style="margin:0 0 6px">Frage je Kompetenz: „Wer hat sich mit 1 oder 2 bewertet?“ – Hände zählen.</div>`+s.items.map((it,i)=>`<div style="font-weight:700;margin-top:6px">${it.t}</div>`+tallyRows(s.id+'.'+i,['Hände bei 1–2 (Defizit)','Hände bei 4 (Stärke)'])).join('');
+  else if(s.kind==='plan')inner=`<form id="noteForm" data-k="${s.id}" class="row"><input type="text" id="noteIn" placeholder="Zuruf: Name – Aktivität – bis – Kriterium" style="flex:1"><button class="btn sm">Hinzufügen</button></form>`;
+  else if(s.kind==='rewrite')inner=`<form id="noteForm" data-k="${s.id}.0" class="row"><input type="text" id="noteIn" placeholder="Zuruf zu Nachricht 1 …" style="flex:1"><button class="btn sm">Hinzufügen</button></form>`;
+  if(!inner)return '';
+  return `<div class="sbox t"><h4>Zählen · Handzeichen &amp; Zurufe</h4><div class="hint" style="margin:0 0 8px">Für Teilnehmer ohne Gerät: Zählerstände fließen sofort in die Ergebnisbalken.</div><div class="tally">${inner}</div></div>`;}
+function fmt(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+setInterval(()=>{const el=$('#timerVal');if(el){const s=SLIDES[cur];const st=session.startedAt[s.id];if(st){el.textContent=fmt(Date.now()-st);$('#timerBox').classList.toggle('over',(Date.now()-st)/60000>s.min);}}
+  $('#clock').textContent=new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});},1000);
+
+/* Navigation */
+function go(i,manual){i=Math.max(0,Math.min(SLIDES.length-1,i));cur=i;
+  if(manual&&!isOwner){follow=false;$('#follow').checked=false;try{localStorage.setItem('pm.follow','0');}catch(e){}}
+  window.scrollTo({top:0});render();}
+$('#prevBtn').onclick=()=>go(cur-1,true);$('#nextBtn').onclick=()=>go(cur+1,true);
+document.addEventListener('keydown',e=>{if(e.target.matches('textarea,input'))return;if(e.key==='ArrowRight')go(cur+1,true);if(e.key==='ArrowLeft')go(cur-1,true);});
+$('#follow').onchange=e=>{follow=e.target.checked;try{localStorage.setItem('pm.follow',follow?'1':'0');}catch(x){}if(follow)go(session.slide);};
+$('#myResetBtn').onclick=async()=>{const b=$('#myResetBtn');if(b.dataset.armed!=='1'){b.dataset.armed='1';b.textContent='Wirklich löschen? Nochmal klicken';setTimeout(()=>{b.dataset.armed='';b.textContent='Meine Antworten löschen';},5000);return;}
+  b.dataset.armed='';b.textContent='Meine Antworten löschen';mine={a:{}};persistLocal();if(db&&uid&&!localOnly&&!isOwner){try{await db.doc('answers/'+uid).delete();}catch(e){}}saveState='idle';render();};
+$('#nickIn').value=nick;$('#nickIn').oninput=e=>{nick=e.target.value.trim();try{localStorage.setItem('pm.nick',nick);}catch(x){}if(Object.keys(mine.a).length)queueSave();};
+$('#previewBtn').onclick=()=>{preview=!preview;$('#previewBtn').classList.toggle('on',preview);$('#modeBadge').textContent=preview?'Vorschau Teilnehmer':'Trainer';render();};
+
+/* Start */
+$('#follow').checked=follow;render();
+if(!claude.ready){$('#cfgBox').hidden=false;$('#cfgClose').onclick=()=>{$('#cfgBox').hidden=true;};}
+function showLogin(){$('#loginBox').hidden=false;$('#loginMail').focus();}
+if(location.hash==='#trainer'&&claude.ready)showLogin();
+window.addEventListener('hashchange',()=>{if(location.hash==='#trainer'&&!isOwner)showLogin();});
+$('#loginCancel').onclick=()=>{$('#loginBox').hidden=true;location.hash='';};
+$('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginErr').textContent='';try{await claude.login($('#loginMail').value.trim(),$('#loginPw').value);}catch(err){$('#loginErr').textContent='Anmeldung fehlgeschlagen: '+(err.message||'');}};
+$('#logoutBtn').onclick=()=>claude.logout();
+(async()=>{
+  userCap=await claude.use('user');isOwner=userCap?await userCap.isOwner():false;uid=userCap?await userCap.id():null;
+  if(isOwner){$('#modeBadge').textContent='Trainer';$('#previewBtn').hidden=false;$('#clock').hidden=false;$('#followBox').hidden=true;$('#nickIn').hidden=true;$('#logoutBtn').hidden=false;$('#loginBox').hidden=true;}
+  db=await claude.use('db');
+  if(!db){saveState='local';localOnly=true;render();return;}
+  if(userCap){const w=await userCap.can('data.write');if(w===false)localOnly=true;}
+  const sref=db.doc('session/state');
+  if(isOwner){const snap=await sref.get();if(snap.exists)mergeSession(snap.data());else await sref.set(session).catch(()=>{});}
+  sref.onSnapshot(snap=>{if(!snap.exists)return;const d=snap.data();if(!isOwner||snap.metadata.hasPendingWrites===false)mergeSession(d);
+    if(!isOwner&&follow&&session.slide!==cur)cur=Math.min(session.slide,SLIDES.length-1);render();},()=>{});
+  if(uid&&!isOwner&&!localOnly){const m=await db.doc('answers/'+uid).get();if(m.exists){const d=clone(m.data());if(d.a&&Object.keys(d.a).length>=Object.keys(mine.a).length)mine={a:d.a};if(d.nick&&!nick){nick=d.nick;$('#nickIn').value=nick;}}}
+  db.collection('answers').onSnapshot(async snap=>{const n={};snap.docs.forEach(d=>n[d.id]=clone(d.data()));all=n;if(userCap)names=await userCap.profiles(Object.keys(all));render();},()=>{});
+  render();
+})();
+</script>
+
+</body>
+</html>

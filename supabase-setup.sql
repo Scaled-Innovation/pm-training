@@ -1,0 +1,23 @@
+-- lern.link PM-Training · Supabase-Einrichtung (bereits am 21.10.2026 im Projekt pm-training ausgeführt)
+create table if not exists public.sessions (id text primary key, state jsonb not null default '{}'::jsonb, updated_at timestamptz default now());
+create table if not exists public.answers (pid text primary key, nick text default '', a jsonb not null default '{}'::jsonb, updated_at timestamptz default now());
+alter table public.sessions enable row level security;
+alter table public.answers  enable row level security;
+drop policy if exists "sessions_read" on public.sessions;
+create policy "sessions_read" on public.sessions for select using (true);
+drop policy if exists "answers_read" on public.answers;
+create policy "answers_read" on public.answers for select using (true);
+drop policy if exists "sessions_trainer_write" on public.sessions;
+create policy "sessions_trainer_write" on public.sessions for all to authenticated using (true) with check (true);
+drop policy if exists "answers_insert" on public.answers;
+create policy "answers_insert" on public.answers for insert to anon, authenticated with check (true);
+drop policy if exists "answers_update" on public.answers;
+create policy "answers_update" on public.answers for update to anon, authenticated using (true) with check (true);
+drop policy if exists "answers_trainer_delete" on public.answers;
+create policy "answers_trainer_delete" on public.answers for delete to authenticated using (true);
+grant usage on schema public to anon, authenticated;
+grant select, insert, update on table public.answers to anon;
+grant select, insert, update, delete on table public.answers to authenticated;
+grant select on table public.sessions to anon;
+grant select, insert, update, delete on table public.sessions to authenticated;
+alter publication supabase_realtime add table public.sessions, public.answers;

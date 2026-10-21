@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>lern.link PM-Training</title>
-<!-- v1.2 · Scaled-Innovation/pm-training · Deploy via Vercel -->
+<!-- v1.4 · Scaled-Innovation/pm-training · Deploy via Vercel -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap">
 <style>
 /* Layout: Bühne mittig, Trainer-Regie rechts. Scaled-Innovation-CI: Navy-Stufen, Violet-Akzent, Open Sans, keine Schatten. Bewusst Single-Theme (dark). */
@@ -234,7 +234,8 @@ input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid v
 const SLIDES=window.SLIDES||[];
 const $=s=>document.querySelector(s);
 let db=null,userCap=null,uid=null,isOwner=false,preview=false;
-let cur=0, follow=true, localOnly=false, lastTrainerSlide=null;
+let cur=0, follow=true, localOnly=false, lastTrainerSlide=null, autoOpen=true;
+try{const ao=localStorage.getItem('pm.autoOpen');if(ao!==null)autoOpen=ao==='1';}catch(e){}
 const SESSION0=()=>({slide:0,reveal:{},startedAt:{},tally:{},notes:{}});
 let session=SESSION0();
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -293,7 +294,11 @@ function render(){
     FORCE=false;RESULTS=false;h+=R[s.kind](s);
     FORCE=true;RESULTS=true;h+=`<div class="block results"><div class="eyebrow" style="margin-bottom:6px">Ergebnisse · ${session.reveal[s.id]?'für Teilnehmer freigegeben':'nur du siehst das'}</div>`+R[s.kind](s)+`</div>`;
     FORCE=null;RESULTS=false;
+  }else if(!isOwner&&s.kind!=='content'){
+    FORCE=false;RESULTS=false;h+=R[s.kind](s);
+    if(session.reveal[s.id]){FORCE=true;RESULTS=true;h+=`<div class="block results"><div class="eyebrow" style="margin-bottom:6px">Ergebnisse des Teams</div>`+R[s.kind](s)+`</div>`;FORCE=null;RESULTS=false;}
   }else h+=R[s.kind](s);
+  if(!isOwner&&cur>=maxSlide()&&cur<SLIDES.length-1)h+=`<div class="block"><div class="locked" id="waitBox">⏳ Du bist auf dem aktuellen Stand. Der Trainer öffnet die nächste Folie – sie erscheint hier automatisch. Bis dahin kannst du oben noch antworten.</div></div>`;
   st.innerHTML=h;bind(s);
   $('#cnt').textContent=`${cur+1} / ${SLIDES.length}`;
   $('#prevBtn').disabled=cur===0;$('#nextBtn').disabled=cur>=maxSlide();$('#nextBtn').title=(!isOwner&&cur>=maxSlide()&&cur<SLIDES.length-1)?'Der Trainer hat die nächste Folie noch nicht geöffnet':'';
@@ -480,7 +485,7 @@ async function doExport(kind){const f=exportData(kind);const dl=await claude.use
 function renderSide(){const side=$('#side');if(!isOwner||preview){side.hidden=true;$('#wrap').classList.remove('trainer');return;}
   side.hidden=false;$('#wrap').classList.add('trainer');
   const s=SLIDES[cur];const n=s.notes||{};const live=session.slide===cur;const started=session.startedAt[s.id];
-  let h=`<div class="sbox t"><h4>Regie</h4><div class="row"><button class="btn sm" id="liveBtn" ${live?'disabled':''}>${live?'Teilnehmer sehen diese Folie':'Diese Folie für alle öffnen'}</button><button class="btn sm ghost" id="revealBtn">${session.reveal[s.id]?'Ergebnis verbergen':'Ergebnis freigeben'}</button></div>
+  let h=`<div class="sbox t"><h4>Regie</h4><div class="row"><button class="btn sm" id="liveBtn" ${live?'disabled':''}>${live?'Teilnehmer sehen diese Folie':'Diese Folie für alle öffnen'}</button><label class="follow" style="color:var(--dim)"><input type="checkbox" id="autoOpen" ${autoOpen?'checked':''}> Beim Blättern automatisch öffnen</label><button class="btn sm ghost" id="revealBtn">${session.reveal[s.id]?'Ergebnis verbergen':'Ergebnis freigeben'}</button></div>
     <div class="timer ${started&&(Date.now()-started)/60000>s.min?'over':''}" id="timerBox" style="margin-top:10px"><b id="timerVal">${started?fmt(Date.now()-started):'0:00'}</b><small>von ${s.min} Min · ${s.opt?'Vertiefung, nicht im 2h-Kern':'Kernplan ab Minute '+slideStart(cur)}</small></div>
     <div class="hint">Pfeiltasten blättern. Ergebnisse siehst du hier immer; die Teilnehmer erst nach Freigabe.</div>
     </div>
@@ -505,6 +510,7 @@ function renderSide(){const side=$('#side');if(!isOwner||preview){side.hidden=tr
   side.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{confirmState=b.dataset.ask;renderSide();});
   side.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{confirmState=null;renderSide();});
   side.querySelectorAll('[data-confirm]').forEach(b=>b.onclick=()=>{const id=b.dataset.confirm;confirmState=null;doReset(id);});
+  $('#autoOpen').onchange=e=>{autoOpen=e.target.checked;try{localStorage.setItem('pm.autoOpen',autoOpen?'1':'0');}catch(x){}};
   $('#liveBtn').onclick=()=>setSession(ss=>{ss.slide=cur;ss.maxSlide=Math.max(ss.maxSlide||0,cur);if(!ss.startedAt[s.id])ss.startedAt[s.id]=Date.now();});
   $('#revealBtn').onclick=()=>setSession(ss=>{ss.reveal[s.id]=!ss.reveal[s.id];});
   side.querySelectorAll('.tally button[data-s]').forEach(b=>b.onclick=()=>setSession(ss=>{const k=b.dataset.s;ss.tally[k]=ss.tally[k]||{};ss.tally[k][b.dataset.i]=Math.max(0,(ss.tally[k][b.dataset.i]||0)+(+b.dataset.d));}));
@@ -533,6 +539,7 @@ setInterval(()=>{const el=$('#timerVal');if(el){const s=SLIDES[cur];const st=ses
 /* Navigation */
 function maxSlide(){return isOwner?SLIDES.length-1:Math.min(SLIDES.length-1,Math.max(session.maxSlide||0,session.slide||0));}
 function go(i,manual){i=Math.max(0,Math.min(SLIDES.length-1,i));if(!isOwner&&i>maxSlide()){i=maxSlide();}cur=i;
+  if(isOwner&&autoOpen&&manual&&session.slide!==cur){const s=SLIDES[cur];session.slide=cur;session.maxSlide=Math.max(session.maxSlide||0,cur);if(!session.startedAt[s.id])session.startedAt[s.id]=Date.now();saveSession();}
   window.scrollTo({top:0});render();}
 $('#prevBtn').onclick=()=>go(cur-1,true);$('#nextBtn').onclick=()=>go(cur+1,true);
 document.addEventListener('keydown',e=>{if(e.target.matches('textarea,input'))return;if(e.key==='ArrowRight')go(cur+1,true);if(e.key==='ArrowLeft')go(cur-1,true);});

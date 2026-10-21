@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>lern.link PM-Training</title>
-<!-- v1.1 · Scaled-Innovation/pm-training · Deploy via Vercel -->
+<!-- v1.2 · Scaled-Innovation/pm-training · Deploy via Vercel -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap">
 <style>
 /* Layout: Bühne mittig, Trainer-Regie rechts. Scaled-Innovation-CI: Navy-Stufen, Violet-Akzent, Open Sans, keine Schatten. Bewusst Single-Theme (dark). */
@@ -149,6 +149,14 @@ input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid v
 .overlay .box{background:var(--navy-2);border:1px solid var(--border-v);border-radius:12px;padding:24px;width:min(380px,100%);display:grid;gap:12px}
 .overlay h2{font-size:18px}
 .overlay .err{color:var(--red);font-size:13px;min-height:1em}
+.nav .dots button.lock{opacity:.25;cursor:not-allowed}
+.gate .box{width:min(440px,100%)}
+.gate input[type=text]{font-size:18px;padding:12px 14px}
+#printView{display:none}
+@media print{body>*{display:none!important}#printView{display:block!important;color:#000;background:#fff;font:12pt/1.5 'Open Sans',Arial,sans-serif;padding:0}
+ #printView h1{font-size:20pt;margin:0 0 4pt;color:#000}#printView h2{font-size:13pt;margin:16pt 0 6pt;color:#4C49CC;border-bottom:1px solid #ccc;padding-bottom:3pt}#printView h3{font-size:11pt;margin:8pt 0 2pt;color:#000}
+ #printView p{margin:0 0 4pt}#printView .meta{color:#555;font-size:10pt}#printView table{border-collapse:collapse;width:100%;font-size:10.5pt}#printView td,#printView th{border:1px solid #ccc;padding:4pt 6pt;text-align:left;vertical-align:top}
+ #printView .box{border:1px solid #999;border-radius:6pt;padding:8pt 10pt;margin:6pt 0}#printView .pb{page-break-inside:avoid}}
 /* Trainer-Regie */
 .side{min-width:0;display:grid;gap:12px;align-content:start}
 .sbox{background:var(--navy-2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:14px;color:var(--dim)}
@@ -197,6 +205,8 @@ input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid v
 </header>
 
 <div class="overlay" id="loginBox" hidden><form class="box" id="loginForm"><h2>Trainer-Anmeldung</h2><p class="hint" style="margin:0">Nur für die Trainer-Ansicht. Teilnehmer brauchen keine Anmeldung – einfach den Link ohne „#trainer“ öffnen.</p><label class="form" style="margin:0"><span style="font-size:12px;color:var(--violet-l);font-weight:700;letter-spacing:.1em">E-MAIL</span><input type="email" id="loginMail" required autocomplete="username"></label><label class="form" style="margin:0"><span style="font-size:12px;color:var(--violet-l);font-weight:700;letter-spacing:.1em">PASSWORT</span><input type="password" id="loginPw" required autocomplete="current-password" style="width:100%;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--navy);color:var(--offwhite)"></label><div class="err" id="loginErr"></div><div class="row"><button class="btn" type="submit">Anmelden</button><button class="btn ghost" type="button" id="loginCancel">Abbrechen</button></div></form></div>
+<div class="overlay gate" id="nameGate" hidden><form class="box" id="nameForm"><h2>Willkommen zum PM-Training</h2><p class="hint" style="margin:0">Wie sollen wir dich nennen? Der Name erscheint in deinem Training und beim Trainer – sonst nirgends.</p><input type="text" id="nameGateIn" maxlength="40" placeholder="Dein Vorname" required autocomplete="given-name"><button class="btn" type="submit">Los geht’s</button></form></div>
+<div id="printView"></div>
 <div class="overlay" id="cfgBox" hidden><div class="box"><h2>Konfiguration fehlt</h2><p class="hint" style="margin:0">In <code>config.js</code> müssen SUPABASE_URL und SUPABASE_ANON_KEY eingetragen sein (Supabase → Project Settings → API). Ohne Verbindung läuft die Seite nur lokal auf diesem Gerät.</p><button class="btn ghost" id="cfgClose">Trotzdem lokal öffnen</button></div></div>
 <main class="wrap" id="wrap">
   <section class="stage" id="stage" aria-live="polite"></section>
@@ -207,7 +217,7 @@ input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid v
   <button class="btn ghost sm" id="prevBtn">‹ Zurück</button>
   <div class="dots" id="dots"></div>
   <span class="cnt" id="cnt">1 / 1</span>
-  <label class="follow" id="followBox"><input type="checkbox" id="follow" checked> Trainer folgen</label>
+  <label class="follow" id="followBox" hidden><input type="checkbox" id="follow" checked> Trainer folgen</label>
   <input type="text" id="nickIn" placeholder="Dein Name" maxlength="40" style="width:130px;padding:6px 10px;font-size:13px" title="Dein Name, wie er in den Ergebnissen erscheint">
 
   <button class="btn sm" id="nextBtn">Weiter ›</button>
@@ -224,7 +234,7 @@ input[type=date]{font:inherit;font-size:14px;padding:9px 12px;border:1px solid v
 const SLIDES=window.SLIDES||[];
 const $=s=>document.querySelector(s);
 let db=null,userCap=null,uid=null,isOwner=false,preview=false;
-let cur=0, follow=true, localOnly=false;
+let cur=0, follow=true, localOnly=false, lastTrainerSlide=null;
 const SESSION0=()=>({slide:0,reveal:{},startedAt:{},tally:{},notes:{}});
 let session=SESSION0();
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -270,12 +280,14 @@ function extraOf(s){return RESULTS?'':(s.extra||'');}
 function nm(id){const p=names[id];const r=all[id];return (p&&p.name)||(r&&r.nick)||'Teilnehmer:in';}
 function esc(t){return String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 const K=i=>String.fromCharCode(65+i);
+const who=()=>nick?esc(nick):'';
+function pers(t){return String(t||'').replace(/\{name\}/g,who()).replace(/\{,name\}/g,nick?', '+esc(nick):'').replace(/\{name,\}/g,nick?esc(nick)+', ':'');}
 
 /* Rendering */
 function render(){
   const s=SLIDES[cur];const st=$('#stage');
-  let h=`<div class="eyebrow">${cur+1} / ${SLIDES.length} · ${s.title} · ${s.min} Min${s.opt?' · <span class="opt">Vertiefung</span>':''}</div><h1>${s.h}</h1>`;
-  if(s.lead)h+=`<p class="lead">${s.lead}</p>`;
+  let h=`<div class="eyebrow">${cur+1} / ${SLIDES.length} · ${s.title} · ${s.min} Min${s.opt?' · <span class="opt">Vertiefung</span>':''}</div><h1>${pers(s.h)}</h1>`;
+  if(s.lead)h+=`<p class="lead">${pers(s.lead)}</p>`;
   const R={content:rContent,poll:rPoll,quiz:rQuiz,scenario:rScen,rewrite:rRewrite,risk:rRisk,multi:rMulti,text:rText,check:rCheck,quad:rQuad,selfcheck:rSelfcheck,plan:rPlan};
   if(isOwner&&!preview&&s.kind!=='content'){
     FORCE=false;RESULTS=false;h+=R[s.kind](s);
@@ -284,9 +296,9 @@ function render(){
   }else h+=R[s.kind](s);
   st.innerHTML=h;bind(s);
   $('#cnt').textContent=`${cur+1} / ${SLIDES.length}`;
-  $('#prevBtn').disabled=cur===0;$('#nextBtn').disabled=cur===SLIDES.length-1;
-  const d=$('#dots');d.innerHTML=SLIDES.map((x,i)=>`<button data-i="${i}" class="${i===cur?'on':(i<session.slide?'done':'')} ${x.opt?'o':''}" title="${x.title}" aria-label="${x.title}"></button>`).join('');
-  d.querySelectorAll('button').forEach(b=>b.onclick=()=>go(+b.dataset.i,true));
+  $('#prevBtn').disabled=cur===0;$('#nextBtn').disabled=cur>=maxSlide();$('#nextBtn').title=(!isOwner&&cur>=maxSlide()&&cur<SLIDES.length-1)?'Der Trainer hat die nächste Folie noch nicht geöffnet':'';
+  const d=$('#dots');d.innerHTML=SLIDES.map((x,i)=>`<button data-i="${i}" class="${i===cur?'on':(i<session.slide?'done':'')} ${x.opt?'o':''} ${i>maxSlide()?'lock':''}" title="${i>maxSlide()?'Noch nicht freigegeben':x.title}" aria-label="${x.title}" ${i>maxSlide()?'disabled':''}></button>`).join('');
+  d.querySelectorAll('button:not([disabled])').forEach(b=>b.onclick=()=>go(+b.dataset.i,true));
   renderSide();renderStatus();
 }
 function rContent(s){return bodyOf(s)+extraOf(s);}
@@ -296,7 +308,7 @@ function renderStatus(){const el=$('#saveStatus');if(!el)return;
   el.className='status'+(saveState==='saved'?' saved':'');el.lastElementChild.textContent=map[saveState]||'';el.hidden=!map[saveState];}
 function resultBars(sid,opts,picker,correct){const c=counts(sid,opts.length,picker);const mx=Math.max(1,...c);
   return opts.map((o,i)=>`<div class="opt ${correct===i?'correct':''}" style="cursor:default"><span class="key">${K(i)}</span><span style="flex:1;min-width:0">${o}<div class="bar"><i class="${correct===i?'ok':''}" style="width:${c[i]/mx*100}%"></i></div></span><span class="cnt">${c[i]}</span></div>`).join('');}
-function rPoll(s){const v=mine.a[s.id]||[];let h=bodyOf(s)+`<div class="block"><h3>${s.q}</h3>`;
+function rPoll(s){const v=mine.a[s.id]||[];let h=bodyOf(s)+(s.pdf&&!isOwner&&!RESULTS?`<div class="block"><div class="card v"><h4>Deine Ergebnisse als PDF</h4><p>Profil, Erfolgsturbo, Standortbestimmung und alle Antworten – zum Behalten und für den Folgetermin.</p><button class="btn sm" id="pdfBtn" style="margin-top:8px">PDF erstellen</button><p class="hint">Im Druckdialog „Als PDF speichern“ wählen.</p></div></div>`:'')+`<div class="block"><h3>${s.q}</h3>`;
   if(revealed(s))h+=`<div class="opts">${resultBars(s.id,s.opts,x=>Array.isArray(x)?x:[],s.correct)}</div>`+(s.why?`<p class="hint">${s.why}</p>`:'');
   else{h+=`<div class="opts">`+s.opts.map((o,i)=>`<button class="opt ${v.includes(i)?'sel':''}" data-i="${i}"><span class="key">${K(i)}</span><span>${o}</span></button>`).join('')+`</div>`;if(s.max>1)h+=`<p class="hint">Bis zu ${s.max} Antworten.</p>`;}
   return h+statusHtml()+`</div>`+extraOf(s);}
@@ -391,6 +403,7 @@ function rPlan(s){const p=Object.assign({},mine.a[s.id]||{});const rev=revealed(
 function planText(p){const items=SLIDES.find(x=>x.id===SC_ID).items;const pr=profile();return `Erfolgsturbo – ${nick||'(Name)'}\nStärke: ${pr?pr.hi.t:'–'}\nDefizit: ${pr?pr.lo.t:'–'}\nFokus: ${items[p.area]?items[p.area].t:'–'}\nAktivität: ${p.act||''}\nBis: ${p.due||''}\nErfolgskriterium: ${p.crit||''}\nTeamnutzen: ${p.team||''}`;}
 function planMailto(p){return 'mailto:'+encodeURIComponent(session.mail)+'?subject='+encodeURIComponent('Mein Erfolgsturbo – '+(nick||''))+'&body='+encodeURIComponent(planText(p));}
 function bind(s){const st=$('#stage');
+  const pb=$('#pdfBtn');if(pb)pb.onclick=printMine;
   if(s.kind==='selfcheck')st.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{const v=Object.assign({},mine.a[s.id]||{});v[b.dataset.i]=+b.dataset.v;mine.a[s.id]=v;queueSave();render();});
   if(s.kind==='plan'){const setP=(f)=>{const p=Object.assign({},mine.a[s.id]||{});f(p);mine.a[s.id]=p;queueSave();};
     st.querySelectorAll('.chip[data-area]').forEach(b=>b.onclick=()=>{setP(p=>p.area=+b.dataset.area);render();});
@@ -425,6 +438,23 @@ async function doReset(id){
 async function importCodes(text){const list=parseCodes(text);if(!list.length){say('Keine Codes gefunden. Ein Code beginnt mit „PM1.“');return;}
   let ok=0,fail=0;for(const c of list){const doc={a:c.a,nick:c.nick,imported:Date.now()};all[c.id]=doc;if(db){try{await db.doc('answers/'+c.id).set(doc);ok++;}catch(e){fail++;}}else ok++;}
   render();say(ok+' Codes übernommen ('+list.map(c=>c.nick||c.id).join(', ')+')'+(fail?' – '+fail+' nicht gespeichert':'')+'.');const ta=$('#importIn');if(ta)ta.value='';}
+function mySummaryHtml(){const items=SLIDES.find(x=>x.id===SC_ID).items;const pr=profile();const a=mine.a||{};let h=`<h1>PM-Training · Meine Ergebnisse</h1><p class="meta">${esc(nick||'Teilnehmer:in')} · ${new Date().toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})} · lern.link / Scaled Innovation</p>`;
+  if(pr){h+=`<div class="box pb"><h3>Mein Profil</h3><p><b>Stärke:</b> ${esc(pr.hi.t)} (${pr.hi.v}/4) · <b>Größtes Defizit:</b> ${esc(pr.lo.t)} (${pr.lo.v}/4)</p></div>`;}
+  const t=a.turbo;if(t&&t.act){h+=`<div class="box pb"><h3>Mein Erfolgsturbo</h3><p><b>Fokus:</b> ${esc(items[t.area]?items[t.area].t:'')}</p><p><b>Aktivität:</b> ${esc(t.act)}</p><p><b>Bis:</b> ${esc(t.due||'–')}</p><p><b>Erfolgskriterium:</b> ${esc(t.crit||'–')}</p><p><b>Teamnutzen:</b> ${esc(t.team||'–')}</p></div>`;}
+  const sc=a.selfcheck;if(sc){h+=`<h2>Standortbestimmung</h2><table class="pb"><tr><th>Kompetenz</th><th>Wert (1–4)</th></tr>`+items.map((it,i)=>`<tr><td>${esc(it.t)}</td><td>${sc[i]||'–'}</td></tr>`).join('')+`</table>`;}
+  h+=`<h2>Meine Antworten</h2>`;
+  SLIDES.forEach(sl=>{const v=a[sl.id];if(v===undefined||v===null||v===''||sl.id===SC_ID||sl.id==='turbo')return;let rows=[];
+    if(sl.kind==='poll'||sl.kind==='check')rows.push([sl.q,(Array.isArray(v)?v:[v]).map(i=>sl.opts[i]).join(' | ')]);
+    else if(sl.kind==='quiz')Object.keys(v).forEach(qi=>rows.push([sl.qs[qi].q,sl.qs[qi].opts[v[qi]]+(v[qi]===sl.qs[qi].c?' ✓':' ✗ (richtig: '+sl.qs[qi].opts[sl.qs[qi].c]+')')]));
+    else if(sl.kind==='multi')Object.keys(v).forEach(qi=>rows.push([sl.items[qi].q,sl.items[qi].opts[v[qi]]]));
+    else if(sl.kind==='scenario')Object.keys(v).forEach(ti=>{const x=v[ti];rows.push(['Fall '+(+ti+1)+' · Ball bei',sl.roles[x.b]||'–']);if(x.n!==undefined)rows.push(['Fall '+(+ti+1)+' · Schritt',sl.scen[ti].next[x.n]+(x.n===sl.scen[ti].c?' ✓':'')]);});
+    else if(sl.kind==='rewrite')Object.keys(v).forEach(i=>{if(v[i])rows.push(['Nachricht '+(+i+1),v[i]]);});
+    else if(sl.kind==='risk')Object.keys(v).forEach(i=>rows.push([sl.risks[i].t,'Wahrscheinlichkeit '+(v[i].w||'–')+' · Auswirkung '+(v[i].a||'–')+(v[i].w&&v[i].a?' · Score '+(v[i].w*v[i].a):'')]));
+    else if(sl.kind==='quad')Object.keys(v).forEach(i=>rows.push([sl.items[i].t,sl.fields[v[i]].t]));
+    else if(sl.kind==='text')rows.push(['Text',v]);
+    if(rows.length)h+=`<h3>${esc(sl.title)}</h3><table class="pb">`+rows.map(r=>`<tr><td style="width:45%">${esc(r[0]).replace(/<[^>]+>/g,'')}</td><td>${esc(r[1])}</td></tr>`).join('')+`</table>`;});
+  return h;}
+function printMine(){$('#printView').innerHTML=mySummaryHtml();window.print();}
 function exportData(kind){const items=SLIDES.find(x=>x.id===SC_ID).items;const ids=Object.keys(all);const when=new Date().toISOString().slice(0,16).replace('T','_').replace(':','');
   if(kind==='json'){return {name:'pm-training_'+(session.group||'gruppe')+'_'+when+'.json',text:JSON.stringify({exported:new Date().toISOString(),group:session.group||'',session,participants:ids.map(id=>({id,name:nm(id),answers:all[id].a}))},null,1)};}
   const rows=[['Name','Folie','Frage','Antwort']];
@@ -457,7 +487,7 @@ function renderSide(){const side=$('#side');if(!isOwner||preview){side.hidden=tr
   <div class="sbox t"><h4>Gruppe · Daten</h4>
     <input type="text" id="groupIn" placeholder="Gruppenname (für Export)" value="${esc(session.group||'')}" style="margin-bottom:8px">
     <input type="text" id="mailIn" placeholder="Deine E-Mail (für den Plan-Versand am Ende)" value="${esc(session.mail||'')}">
-    <div class="hint" style="margin:6px 0 0">Teilnehmer-Link: diese Adresse ohne „#trainer“. ${Object.keys(all).length} Teilnehmer live verbunden. Zähler nur für Zurufe nötig.</div>
+    <div class="hint" style="margin:6px 0 0">Teilnehmer-Link: diese Adresse ohne „#trainer“. Teilnehmer können nur bis zur zuletzt geöffneten Folie blättern (${(session.maxSlide||0)+1}). ${Object.keys(all).length} Teilnehmer live verbunden. Zähler nur für Zurufe nötig.</div>
     <div class="row" style="margin-top:12px;gap:6px"><button class="btn sm ghost" data-export="csv">Export CSV</button><button class="btn sm ghost" data-export="json">Export JSON</button></div>
     <div class="row" style="margin-top:12px;gap:6px">${confirmBtn('resetSession','Sitzung zurücksetzen','Wirklich? Folie, Freigaben, Timer, Zähler und Zurufe werden gelöscht.')}${confirmBtn('resetAnswers','Alle Teilnehmer-Antworten löschen','Wirklich? Erst exportiert? Alle Antworten, Pläne und Selbsteinschätzungen aller Teilnehmer werden gelöscht.')}</div><div class="hint" id="resetMsg"></div></div>`;
   if(n.goal)h+=`<div class="sbox"><h4>Ziel</h4>${n.goal}</div>`;
@@ -475,7 +505,7 @@ function renderSide(){const side=$('#side');if(!isOwner||preview){side.hidden=tr
   side.querySelectorAll('[data-ask]').forEach(b=>b.onclick=()=>{confirmState=b.dataset.ask;renderSide();});
   side.querySelectorAll('[data-cancel]').forEach(b=>b.onclick=()=>{confirmState=null;renderSide();});
   side.querySelectorAll('[data-confirm]').forEach(b=>b.onclick=()=>{const id=b.dataset.confirm;confirmState=null;doReset(id);});
-  $('#liveBtn').onclick=()=>setSession(ss=>{ss.slide=cur;if(!ss.startedAt[s.id])ss.startedAt[s.id]=Date.now();});
+  $('#liveBtn').onclick=()=>setSession(ss=>{ss.slide=cur;ss.maxSlide=Math.max(ss.maxSlide||0,cur);if(!ss.startedAt[s.id])ss.startedAt[s.id]=Date.now();});
   $('#revealBtn').onclick=()=>setSession(ss=>{ss.reveal[s.id]=!ss.reveal[s.id];});
   side.querySelectorAll('.tally button[data-s]').forEach(b=>b.onclick=()=>setSession(ss=>{const k=b.dataset.s;ss.tally[k]=ss.tally[k]||{};ss.tally[k][b.dataset.i]=Math.max(0,(ss.tally[k][b.dataset.i]||0)+(+b.dataset.d));}));
   const exS=$('#side #exportBtn');if(exS)exS.remove();
@@ -501,8 +531,8 @@ setInterval(()=>{const el=$('#timerVal');if(el){const s=SLIDES[cur];const st=ses
   $('#clock').textContent=new Date().toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});},1000);
 
 /* Navigation */
-function go(i,manual){i=Math.max(0,Math.min(SLIDES.length-1,i));cur=i;
-  if(manual&&!isOwner){follow=false;$('#follow').checked=false;try{localStorage.setItem('pm.follow','0');}catch(e){}}
+function maxSlide(){return isOwner?SLIDES.length-1:Math.min(SLIDES.length-1,Math.max(session.maxSlide||0,session.slide||0));}
+function go(i,manual){i=Math.max(0,Math.min(SLIDES.length-1,i));if(!isOwner&&i>maxSlide()){i=maxSlide();}cur=i;
   window.scrollTo({top:0});render();}
 $('#prevBtn').onclick=()=>go(cur-1,true);$('#nextBtn').onclick=()=>go(cur+1,true);
 document.addEventListener('keydown',e=>{if(e.target.matches('textarea,input'))return;if(e.key==='ArrowRight')go(cur+1,true);if(e.key==='ArrowLeft')go(cur-1,true);});
@@ -514,24 +544,27 @@ $('#previewBtn').onclick=()=>{preview=!preview;$('#previewBtn').classList.toggle
 
 /* Start */
 $('#follow').checked=follow;render();
+function maybeGate(){if(isOwner||nick||location.hash==='#trainer')return;$('#nameGate').hidden=false;setTimeout(()=>$('#nameGateIn').focus(),50);}
+$('#nameForm').onsubmit=e=>{e.preventDefault();const v=$('#nameGateIn').value.trim();if(!v)return;nick=v;$('#nickIn').value=nick;try{localStorage.setItem('pm.nick',nick);}catch(x){}$('#nameGate').hidden=true;if(Object.keys(mine.a).length)queueSave();render();};
 if(!claude.ready){$('#cfgBox').hidden=false;$('#cfgClose').onclick=()=>{$('#cfgBox').hidden=true;};}
 function showLogin(){$('#loginBox').hidden=false;$('#loginMail').focus();}
 if(location.hash==='#trainer'&&claude.ready)showLogin();
 window.addEventListener('hashchange',()=>{if(location.hash==='#trainer'&&!isOwner)showLogin();});
-$('#loginCancel').onclick=()=>{$('#loginBox').hidden=true;location.hash='';};
+$('#loginCancel').onclick=()=>{$('#loginBox').hidden=true;location.hash='';maybeGate();};
 $('#loginForm').onsubmit=async e=>{e.preventDefault();$('#loginErr').textContent='';try{await claude.login($('#loginMail').value.trim(),$('#loginPw').value);}catch(err){$('#loginErr').textContent='Anmeldung fehlgeschlagen: '+(err.message||'');}};
 $('#logoutBtn').onclick=()=>claude.logout();
 (async()=>{
   userCap=await claude.use('user');isOwner=userCap?await userCap.isOwner():false;uid=userCap?await userCap.id():null;
   if(isOwner){$('#modeBadge').textContent='Trainer';$('#previewBtn').hidden=false;$('#clock').hidden=false;$('#followBox').hidden=true;$('#nickIn').hidden=true;$('#logoutBtn').hidden=false;$('#loginBox').hidden=true;}
+  maybeGate();
   db=await claude.use('db');
   if(!db){saveState='local';localOnly=true;render();return;}
   if(userCap){const w=await userCap.can('data.write');if(w===false)localOnly=true;}
   const sref=db.doc('session/state');
   if(isOwner){const snap=await sref.get();if(snap.exists)mergeSession(snap.data());else await sref.set(session).catch(()=>{});}
   sref.onSnapshot(snap=>{if(!snap.exists)return;const d=snap.data();if(!isOwner||snap.metadata.hasPendingWrites===false)mergeSession(d);
-    if(!isOwner&&follow&&session.slide!==cur)cur=Math.min(session.slide,SLIDES.length-1);render();},()=>{});
-  if(uid&&!isOwner&&!localOnly){const m=await db.doc('answers/'+uid).get();if(m.exists){const d=clone(m.data());if(d.a&&Object.keys(d.a).length>=Object.keys(mine.a).length)mine={a:d.a};if(d.nick&&!nick){nick=d.nick;$('#nickIn').value=nick;}}}
+    if(!isOwner){if(session.slide!==lastTrainerSlide){lastTrainerSlide=session.slide;cur=Math.min(session.slide,SLIDES.length-1);window.scrollTo({top:0});}if(cur>maxSlide())cur=maxSlide();}render();},()=>{});
+  if(uid&&!isOwner&&!localOnly){const m=await db.doc('answers/'+uid).get();if(m.exists){const d=clone(m.data());if(d.a&&Object.keys(d.a).length>=Object.keys(mine.a).length)mine={a:d.a};if(d.nick&&!nick){nick=d.nick;$('#nickIn').value=nick;$('#nameGate').hidden=true;}}}
   db.collection('answers').onSnapshot(async snap=>{const n={};snap.docs.forEach(d=>n[d.id]=clone(d.data()));all=n;if(userCap)names=await userCap.profiles(Object.keys(all));render();},()=>{});
   render();
 })();

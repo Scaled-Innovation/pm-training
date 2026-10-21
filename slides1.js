@@ -1,10 +1,10 @@
 window.SLIDES=(window.SLIDES||[]).concat([
 {id:'checkin',min:5,title:'Ankommen',kind:'poll',max:1,
- h:'Willkommen. <em>Im Driver Seat</em> statt auf dem Beifahrersitz.',
+ h:'Willkommen{,name}. <em>Im Driver Seat</em> statt auf dem Beifahrersitz.',
  lead:'Zwei Stunden Kern, dazu Vertiefungen. Ein Ziel: Projekte bei lern.link so führen, dass nichts liegen bleibt, Meilensteine pünktlich kommen und jeder weiß, wer gerade den Ball hat.',
  q:'Mit welchem Gefühl kommst du aus deinem letzten Kundenprojekt?',
  opts:['Entspannt – lief rund','Okay – ein paar Stolpersteine','Angespannt – viel Nachfassen nötig','Erschöpft – zu viele Baustellen gleichzeitig'],
- extra:`<div class="block"><h3>Spielregeln</h3><ul class="clean"><li>Kamera an, Mikro frei. Das ist ein Workshop.</li><li>Trage unten in der Leiste deinen Namen ein. Jede Übung läuft auf deinem Gerät, ohne Anmeldung.</li><li>Deine Antworten laufen live beim Trainer ein. Das Teambild erscheint, sobald er es freigibt.</li><li>Alle Beispiele stammen aus eurer Retro und euren Projekten.</li></ul></div>`,
+ extra:`<div class="block"><h3>Spielregeln</h3><ul class="clean"><li>Kamera an, Mikro frei. Das ist ein Workshop.</li><li>Jede Übung läuft auf deinem Gerät, ohne Anmeldung. Deinen Namen kannst du unten in der Leiste jederzeit ändern.</li><li>Deine Antworten laufen live beim Trainer ein. Das Teambild erscheint, sobald er es freigibt.</li><li>Alle Beispiele stammen aus eurer Retro und euren Projekten.</li></ul></div>`,
  notes:{goal:'Technik-Check durch einen Klick, Stimmung sichtbar machen.',
   steps:['Link posten. Jeder trägt unten seinen Namen ein und klickt beim Check-in eine Antwort an.','Prüfen, dass unter „Ergebnisse“ rechts die Antworten eintreffen (Zähler rechts nur für Leute ohne Gerät).','Freigeben, Ergebnis in einem Satz spiegeln.','Agenda in einem Satz: Grundlagen → Übergabe & Einstieg → Planung → Führen → Steuern → Erfolgsturbo.','Erklären: Folien mit ★ sind Vertiefung – kommen dran, wenn Zeit ist, sonst in Teil 2.'],
   bg:'Teilnehmer brauchen keinen Account. Jede Antwort wird sofort übertragen; du siehst sie unter „Ergebnisse“, die Teilnehmer erst nach Freigabe.',
@@ -34,7 +34,7 @@ window.SLIDES=(window.SLIDES||[]).concat([
  notes:{goal:'Orientierung. Nur ankündigen.',steps:['Sechs Blöcke in 30 Sekunden.','„Zu fast jedem Block gibt es ein Schaubild und eine Übung mit euren Fällen.“'],bg:'Reihenfolge folgt dem Projektlebenszyklus: Start → Planen → Führen → Steuern → Anpassen.',bridge:'',ifstuck:''}},
 
 {id:'selfcheck',min:4,title:'Standortbestimmung',kind:'selfcheck',
- h:'Standortbestimmung: Wo stehe ich heute?',
+ h:'Standortbestimmung: Wo stehst du heute{,name}?',
  lead:'Ehrlich, für dich selbst. Am Ende leitet sich daraus dein Profil ab: deine Stärke, dein größtes Defizit, dein Erfolgsturbo. Einzelwerte sieht nur der Trainer; das Team sieht Durchschnitte.',
  q:'Wie routiniert bin ich heute bei …',
  scale:['mache ich nicht','gelegentlich, unsystematisch','meistens, mit Lücken','routiniert, jedes Projekt'],

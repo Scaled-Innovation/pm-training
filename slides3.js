@@ -93,7 +93,7 @@ window.SLIDES=(window.SLIDES||[]).concat([
   bg:'Agil und Change-Prozess sind kein Widerspruch – der Prozess ist, was Agilität von Chaos unterscheidet.',bridge:'Retro: „Kunde ändert seine Pläne → fehlender Change-Prozess“, „Design ist oft zu sehr überarbeitet“.',ifstuck:'„Dann zahlt der Kunde nie mehr“ → Kunden zahlen für bewertete, sichtbare Änderungen. Nicht für unsichtbaren Mehraufwand.'}},
 
 {id:'turbo',min:10,title:'Mein Erfolgsturbo',kind:'plan',showStatus:false,
- h:'Mein <em>Erfolgsturbo</em>: Stärke, Defizit, die eine Optimierung',
+ h:'{name,}dein <em>Erfolgsturbo</em>: Stärke, Defizit, die eine Optimierung',
  lead:'Kein Vorsatz, sondern eine Handlung mit Datum und Prüfkriterium. Am Folgetermin schauen wir gemeinsam nach – nicht ob du dich bemüht hast, sondern ob das Kriterium erfüllt ist.',
  body:`<div class="cards"><div class="card"><h4>Was ein Erfolgsturbo ist</h4><p>Eine Änderung in deinem Alltag, die ab dem Tag ihrer Umsetzung dir und mindestens einer anderen Person im Team Arbeit, Nachfragen oder Risiko abnimmt.</p></div><div class="card"><h4>Was keiner ist</h4><p>„Besser kommunizieren“, „Odoo mehr nutzen“, „proaktiver sein“. Nichts davon kann jemand am Folgetermin nachprüfen.</p></div><div class="card"><h4>Der Test</h4><p>Könnte eine Kollegin am Folgetermin in Odoo oder im Postfach nachsehen und mit Ja oder Nein antworten? Dann ist es konkret genug.</p></div></div>`,
  sug:[
@@ -121,8 +121,8 @@ window.SLIDES=(window.SLIDES||[]).concat([
   bridge:'Rhythmus-Vereinbarungen aus der Vertiefungsübung passen in Bereich „Controlling & Rhythmus“.',
   ifstuck:'Jemand wählt etwas Vages trotz grauer Haken → Frage: „Was würde ich am Folgetermin in Odoo sehen?“ Wenn die Antwort „nichts“ ist, ist es kein Turbo.'}},
 
-{id:'close',min:3,title:'Abschluss',kind:'poll',max:1,
- h:'Das nehmt ihr mit',
+{id:'close',min:3,title:'Abschluss',kind:'poll',max:1,pdf:true,
+ h:'Das nimmst du mit{,name}',
  q:'Wie hilfreich war das Training für deinen Alltag?',
  opts:['1 – wenig','2','3 – teilweise','4','5 – sehr'],
  extra:`<div class="block"><div class="cards">
